@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router";
 
 const PublicRoute = () => {
   const { isLogin, loginUser } = useSelector((state) => state.loginReducer);
-  if (isLogin && loginUser.pin !== "") {
+  if (isLogin && loginUser?.has_pin) {
     return <Navigate to="/dashboard" replace />;
   }
 

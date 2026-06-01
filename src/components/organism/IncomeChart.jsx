@@ -42,8 +42,8 @@ const IncomeChart = ({ data }) => {
   }, [selectedPeriod]);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (chartRef.current && !chartRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (chartRef.current && !chartRef.current.contains(e.target)) {
         setIsPeriodOpen(false);
         setIsTypeOpen(false);
       }
@@ -52,10 +52,9 @@ const IncomeChart = ({ data }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const activeDataKey = selectedType === "Income" ? "total_income" : "total_expense";
-  const activeBarColor = selectedType === "Income" ? "#10B981" : "#EF4444";
-
-  const chartData = Array.isArray(data) ? data : [];
+  const activeDataKey  = selectedType === "Income" ? "total_income" : "total_expense";
+  const activeBarColor = selectedType === "Income" ? "#2b4aff" : "#EF4444";
+  const chartData      = Array.isArray(data) ? data : [];
 
   return (
       <div

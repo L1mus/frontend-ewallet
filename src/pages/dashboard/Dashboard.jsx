@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import {useDispatch, useSelector} from "react-redux";
 import { useNavigate } from "react-router";
 import CardBalance from "../../components/organism/CardBalance";
 import IncomeChart from "../../components/organism/IncomeChart";
@@ -7,51 +7,38 @@ import CardHistory from "../../components/organism/CardHistory";
 import Button from "../../components/atoms/Button";
 import IconTransfer from "../../assets/icons/Send.svg?react";
 import IconTopUp from "../../assets/icons/Upload.svg?react";
-import { fetchDashboardData } from "../../services/apiMock";
 import Balance from "../../assets/icons/balance.svg?react";
 import MoneyWithdraw from "../../assets/icons/u_money-withdraw.svg?react";
 import ArrowGrowth from "../../assets/icons/ArrowRise-s.svg?react";
+import { transactionActions } from "../../redux/slice/transactionSlice";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [chartData, setChartData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+
   const { loginUser } = useSelector((state) => state.loginReducer);
-  const { transactions } = useSelector((state) => state.transactionReducer);
+
+  const {
+    transactions,
+    dashboardSummary,
+    chartData,
+    isLoading
+  } = useSelector((state) => state.transactionReducer);
 
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      const response = await fetchDashboardData();
-      setChartData(response.chartData);
-      setIsLoading(false);
-    };
-    loadData();
-  }, []);
+    dispatch(transactionActions.getUserDashboard());
+    dispatch(transactionActions.getTransactionReport());
+  }, [dispatch]);
 
-  const totalIncome = transactions
-    .filter(
-      (tx) =>
-        tx.receiverId === loginUser?.id &&
-        (tx.transactionType === "TOPUP" || tx.transactionType === "TRANSFER"),
-    )
-    .reduce((sum, tx) => sum + tx.amount, 0);
-
-  const totalExpense = transactions
-    .filter(
-      (tx) =>
-        tx.senderId === loginUser?.id && tx.transactionType === "TRANSFER",
-    )
-    .reduce((sum, tx) => sum + tx.amount, 0);
+  const balance = dashboardSummary?.balance || 0;
+  const totalIncome = dashboardSummary?.total_income || 0;
+  const totalExpense = dashboardSummary?.total_expense || 0;
 
   const recentTransactions = transactions
-    .filter(
-      (tx) => tx.senderId === loginUser?.id || tx.receiverId === loginUser?.id,
-    )
-    .slice(0, 5);
-
-  const formatBalance = (amount) =>
-    typeof amount === "number" ? amount.toLocaleString("id-ID") : "0";
+      .filter(
+          (tx) => tx.sender_id === loginUser?.id || tx.receiver_id === loginUser?.id,
+      )
+      .slice(0, 4);
 
   return (
     <div className="w-full">
@@ -60,7 +47,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-3 gap-2 sm:gap-4">
             <CardBalance
               title="Balance"
-              balance={formatBalance(loginUser?.balance)}
+              balance={balance}
               children={<Balance className="w-6 h-6" />}
               Icon={ArrowGrowth}
               iconStyle="text-success"
@@ -69,7 +56,7 @@ const Dashboard = () => {
             />
             <CardBalance
               title="Income"
-              balance={formatBalance(totalIncome)}
+              balance={totalIncome}
               children={<MoneyWithdraw className="w-6 h-6" />}
               Icon={ArrowGrowth}
               iconStyle="text-success"
@@ -78,7 +65,7 @@ const Dashboard = () => {
             />
             <CardBalance
               title="Expense"
-              balance={formatBalance(totalExpense)}
+              balance={totalExpense}
               children={<MoneyWithdraw className="rotate-180 w-6 h-6" />}
               Icon={ArrowGrowth}
               iconStyle="rotate-180 text-danger"
@@ -147,37 +134,36 @@ const Dashboard = () => {
             hover:[&::-webkit-scrollbar-thumb]:bg-gray-300"
           >
             {recentTransactions.length > 0 ? (
-              recentTransactions.map((tx) => {
-                const isExpense =
-                  tx.senderId === loginUser?.id &&
-                  tx.transactionType === "TRANSFER";
+                recentTransactions.map((tx) => {
+                  const isSender = tx.sender_id === loginUser?.id;
 
-                return (
-                  <CardHistory
-                    key={tx.id}
-                    name={tx.receiverNameSnapshot}
-                    status={
-                      tx.transactionType === "TOPUP" ? "Top Up" : "Transfer"
-                    }
-                    imageSrc={
-                      tx.profilePicture ||
-                      `https://i.pravatar.cc/150?u=${tx.receiverId}`
-                    }
-                    amount={
-                      <span
-                        className={isExpense ? "text-danger" : "text-success"}
-                      >
-                        {isExpense ? "-" : "+"}Rp{" "}
-                        {tx.amount.toLocaleString("id-ID")}
+                  const displayName = isSender
+                      ? tx.receiver_name || "Recipient"
+                      : tx.sender_name || "Sender";
+
+                  const displayAvatar = isSender
+                      ? tx.receiver_avatar
+                      : tx.sender_avatar;
+
+                  return (
+                      <CardHistory
+                          key={tx.id}
+                          name={displayName}
+                          status="Transfer"
+                          imageSrc={displayAvatar}
+                          amount={
+                            <span className={isSender ? "text-danger" : "text-success"}>
+                        {isSender ? "-" : "+"}Rp{" "}
+                              {(tx.amount || 0).toLocaleString("id-ID")}
                       </span>
-                    }
-                  />
-                );
-              })
+                          }
+                      />
+                  );
+                })
             ) : (
-              <p className="text-grey text-sm text-center py-8">
-                No transactions yet.
-              </p>
+                <p className="text-grey text-sm text-center py-8 italic m-auto">
+                  No transactions yet.
+                </p>
             )}
           </div>
         </div>

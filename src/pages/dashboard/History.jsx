@@ -24,69 +24,63 @@ const History = () => {
   const { loginUser } = useSelector((state) => state.loginReducer);
 
   const userTransactions = useMemo(() => {
+    if (!Array.isArray(transactions)) return [];
     return transactions.filter(
-      (tx) => tx.senderId === loginUser?.id || tx.receiverId === loginUser?.id,
+        (tx) => tx.sender_id === loginUser?.id || tx.receiver_id === loginUser?.id,
     );
   }, [transactions, loginUser?.id]);
 
   const displayData = useMemo(() => {
-    return userTransactions.map((tx) => {
-      const isExpense =
-        tx.senderId === loginUser?.id && tx.transactionType === "TRANSFER";
+    const formatted = userTransactions.map((tx) => {
+      const isSender = tx.sender_id === loginUser?.id;
+
+      const displayName = isSender
+          ? tx.receiver_name || "Recipient"
+          : tx.sender_name || "Sender";
+
+      const displayAvatar = isSender
+          ? tx.receiver_avatar
+          : tx.sender_avatar;
+
+      const amountSign = isSender ? "-" : "+";
+      const amountClass = isSender ? "text-danger" : "text-success";
 
       return {
-        id: tx.id,
-        name: tx.receiverNameSnapshot,
-        phone: tx.receiverPhoneSnapshot || "-",
-        amount: `Rp ${tx.amount.toLocaleString("id-ID")}`,
-        type: isExpense ? "expense" : "income",
-        profilePicture: tx.profilePicture,
-        transactionType: tx.transactionType,
-        timestamp: tx.timestamp,
+        ...tx,
+        displayName,
+        displayAvatar,
+        amountSign,
+        amountClass,
+        searchString: `${displayName} ${tx.notes || ""}`.toLowerCase(),
       };
     });
-  }, [userTransactions, loginUser?.id]);
 
-  const filteredData = useMemo(() => {
-    if (!searchQuery) return displayData;
-    const q = searchQuery.toLowerCase();
-    return displayData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(q) || item.phone.includes(searchQuery),
+    return formatted.filter((item) =>
+        item.searchString.includes(searchQuery.toLowerCase()),
     );
-  }, [displayData, searchQuery]);
+  }, [userTransactions, loginUser?.id, searchQuery]);
 
-  const totalItems = filteredData.length;
+  const totalItems = displayData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const start = (currentPage - 1) * itemsPerPage;
-  const currentItems = filteredData.slice(start, start + itemsPerPage);
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return displayData.slice(startIndex, startIndex + itemsPerPage);
+  }, [displayData, currentPage]);
 
-    if (value) {
-      setSearchParams({ search: value, page: "1" });
-    } else {
-      searchParams.delete("search");
-      searchParams.set("page", "1");
-      setSearchParams(searchParams);
-    }
+  const handlePageChange = (page) => {
+    setSearchParams({ search: searchQuery, page: page.toString() });
   };
 
-  const handlePageChange = (newPage) => {
-    setSearchParams({ search: searchQuery, page: newPage.toString() });
-  };
-
-  const handleConfirmDelete = () => {
-    dispatch(transactionActions.removeTransaction(modalState.id));
-    if (currentItems.length === 1 && currentPage > 1) {
-      setSearchParams({
-        search: searchQuery,
-        page: (currentPage - 1).toString(),
-      });
+  const handleConfirmDelete = async () => {
+    if (modalState.id) {
+      try {
+        await dispatch(transactionActions.deleteTransactionHistory(modalState.id)).unwrap();
+        setModalState({ isOpen: false, id: null });
+      } catch (error) {
+        console.error("Failed to delete transaction:", error);
+      }
     }
-
-    setModalState({ isOpen: false, id: null });
   };
 
   return (
@@ -103,7 +97,8 @@ const History = () => {
             <input
               type="text"
               value={searchQuery}
-              onChange={handleSearchChange}
+              onChange={(e) =>
+                  setSearchParams({ search: e.target.value, page: "1" })}
               placeholder="Enter Number Or Full Name"
               className="w-full border border-grey rounded-lg px-4 py-2.5 pr-10 outline-none text-sm text-grey font-medium focus:border-primary transition-all placeholder:text-grey placeholder:font-medium"
             />
@@ -112,8 +107,8 @@ const History = () => {
         </div>
         <div className="w-full overflow-x-auto">
           <Table>
-            {currentItems.length > 0 ? (
-              currentItems.map((item, index) => (
+            {paginatedData.length > 0 ? (
+                paginatedData.map((item, index) => (
                 <TableContent
                   key={item.id}
                   className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
@@ -121,25 +116,31 @@ const History = () => {
                   <td className="px-2 py-4 md:px-6">
                     <div className="flex items-center gap-3 md:gap-6">
                       <Avatar
-                        imageSrc={item.profilePicture}
+                        imageSrc={item.displayAvatar}
                         className="hidden md:block w-12 h-12 rounded-lg shrink-0"
                       />
                       <span className="text-grey font-bold md:font-medium">
-                        {item.receiverNameSnapshot}
+                        {item.displayName}
                       </span>
                     </div>
                   </td>
                   <td className="hidden md:table-cell px-2 py-4 md:px-6 text-grey font-normal">
                     {item.phone}
                   </td>
-                  <td
-                    className={cn(
-                      "px-2 py-4 md:px-6 text-left font-medium",
-                      item.type === "income" ? "text-success" : "text-danger",
-                    )}
-                  >
-                    {item.type === "income" ? "+" : "-"}
-                    {item.amount}
+                  <td className="px-2 py-4 md:px-6 text-grey text-sm md:text-base font-medium">
+                    {item.created_at
+                        ? new Date(item.created_at).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })
+                        : "-"}
+                  </td>
+                  <td className="px-2 py-4 md:px-6">
+                    <span className={cn("text-sm md:text-base font-bold", item.amountClass)}>
+                      {item.amountSign} Rp.{" "}
+                      {new Intl.NumberFormat("id-ID").format(item.amount || 0)}
+                    </span>
                   </td>
                   <td className="hidden md:table-cell px-2 py-4 md:px-6 text-right">
                     <button

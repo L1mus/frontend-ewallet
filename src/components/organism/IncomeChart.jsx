@@ -23,17 +23,22 @@ const IncomeChart = ({ data }) => {
   const chartRef = useRef(null);
 
   const periodMapping = {
-    "Weekly": "week",
-    "Monthly": "month",
-    "Yearly": "year"
+    Weekly: "week",
+    Monthly: "month",
+    Yearly: "year",
   };
 
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const apiPeriod = periodMapping[selectedPeriod];
     if (apiPeriod) {
       dispatch(transactionActions.getTransactionReport({ period: apiPeriod }));
     }
-  }, [selectedPeriod, dispatch]);
+  }, [selectedPeriod]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -48,6 +53,8 @@ const IncomeChart = ({ data }) => {
 
   const activeDataKey = selectedType === "Income" ? "total_income" : "total_expense";
   const activeBarColor = selectedType === "Income" ? "#10B981" : "#EF4444";
+
+  const chartData = Array.isArray(data) ? data : [];
 
   return (
       <div
@@ -122,50 +129,56 @@ const IncomeChart = ({ data }) => {
         </div>
 
         <div className="w-full h-75 sm:h-87.5 md:h-100">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-                data={data}
-                barSize={40}
-                margin={{ top: 10, right: 0, left: 0, bottom: 20 }}
-            >
-              <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="#E8E8E8"
-              />
-              <XAxis
-                  dataKey="period"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "#808080" }}
-                  dy={15}
-              />
-              <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "#808080" }}
-                  tickFormatter={(val) => (val >= 1000 ? `${val / 1000}k` : val)}
-              />
-              <Tooltip
-                  cursor={{ fill: "rgba(59, 130, 246, 0.05)", radius: 12 }}
-                  contentStyle={{
-                    backgroundColor: "#fff",
-                    border: "1px solid #E8E8E8",
-                    borderRadius: "12px",
-                    boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)",
-                  }}
-                  formatter={(value) => [
-                    `Rp. ${new Intl.NumberFormat("id-ID").format(value)}`,
-                    selectedType,
-                  ]}
-              />
-              <Bar
-                  dataKey={activeDataKey}
-                  fill={activeBarColor}
-                  radius={[12, 12, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          {chartData.length === 0 ? (
+              <div className="w-full h-full flex items-center justify-center text-grey text-sm italic">
+                No data available for this period.
+              </div>
+          ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                    data={chartData}
+                    barSize={40}
+                    margin={{ top: 10, right: 0, left: 0, bottom: 20 }}
+                >
+                  <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#E8E8E8"
+                  />
+                  <XAxis
+                      dataKey="period"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "#808080" }}
+                      dy={15}
+                  />
+                  <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "#808080" }}
+                      tickFormatter={(val) => (val >= 1000 ? `${val / 1000}k` : val)}
+                  />
+                  <Tooltip
+                      cursor={{ fill: "rgba(59, 130, 246, 0.05)", radius: 12 }}
+                      contentStyle={{
+                        backgroundColor: "#fff",
+                        border: "1px solid #E8E8E8",
+                        borderRadius: "12px",
+                        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)",
+                      }}
+                      formatter={(value) => [
+                        `Rp. ${new Intl.NumberFormat("id-ID").format(value)}`,
+                        selectedType,
+                      ]}
+                  />
+                  <Bar
+                      dataKey={activeDataKey}
+                      fill={activeBarColor}
+                      radius={[12, 12, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+          )}
         </div>
       </div>
   );

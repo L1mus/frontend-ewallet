@@ -134,7 +134,7 @@ const IncomeChart = ({ data }) => {
                   stroke="#E8E8E8"
               />
               <XAxis
-                  dataKey="day"
+                  dataKey="period"
                   axisLine={false}
                   tickLine={false}
                   tick={{ fontSize: 12, fill: "#808080" }}

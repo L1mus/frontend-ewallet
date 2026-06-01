@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {transactionService} from "../../services/transactionService.js";
+import { userService } from "../../services/userService.js";
 
 /**
  * Redux slice for managing transaction data (Transfers & Top-Ups).
@@ -14,6 +15,8 @@ import {transactionService} from "../../services/transactionService.js";
 const initialState = {
     transactions: [],
     currentTransaction: null,
+    dashboardSummary: null,
+    chartData: [],
     isLoading: false,
     error: null,
     successMsg: null,
@@ -57,6 +60,31 @@ const topUp = createAsyncThunk(
     },
 );
 
+const getUserDashboard = createAsyncThunk(
+    "transaction/getUserDashboard",
+    async (_, { rejectWithValue }) => {
+        try {
+            const data = await userService.getDashboard();
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Failed to get dashboard.");
+        }
+    },
+);
+
+const getTransactionReport = createAsyncThunk(
+    "transaction/getTransactionReport",
+    async (payload = {}, { rejectWithValue }) => {
+        try {
+            const period = payload.period || "week";
+            const data = await userService.getTransactionReport(period);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Failed to get report.");
+        }
+    },
+);
+
 const transactionSlice = createSlice({
     name: "transaction",
     initialState,
@@ -85,6 +113,14 @@ const transactionSlice = createSlice({
                 state.successMsg = "top-up successfully!";
             })
             .addCase("authLogin/logoutUser/fulfilled", () => initialState)
+            .addCase(getUserDashboard.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.dashboardSummary = action.payload;
+            })
+            .addCase(getTransactionReport.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.chartData = action.payload?.Data || [];
+            })
             .addMatcher(
                 (action) => action.type.startsWith("transaction/") && action.type.endsWith("/pending"),
                 (state) => {
@@ -99,14 +135,16 @@ const transactionSlice = createSlice({
                     state.isLoading = false;
                     state.error = action.payload;
                 },
-            );
+            )
     },
 });
 
 export const transactionActions = {
-  ...transactionSlice.actions,
-  transfer,
-  topUp,
+    ...transactionSlice.actions,
+    transfer,
+    topUp,
+    getUserDashboard,
+    getTransactionReport,
 };
 
 export default transactionSlice.reducer;

@@ -32,7 +32,7 @@ const Dashboard = () => {
 
   const balance = dashboardSummary?.balance || 0;
   const totalIncome = dashboardSummary?.total_income || 0;
-  const totalExpense = dashboardSummary?.total_expense || 0;
+  const totalExpense = dashboardSummary?.total_expenses || 0;
 
   const recentTransactions = transactions
       .filter(

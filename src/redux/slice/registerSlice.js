@@ -169,7 +169,7 @@ export const registerActions = {
   ...registerSlice.actions,
   registerUser,
   forgotPasswordUser,
-  createPinUser,
+  resetPasswordUser,
   updateProfileUser,
   changePasswordUser,
   changePinUser,

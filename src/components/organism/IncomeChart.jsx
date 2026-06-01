@@ -21,6 +21,7 @@ const IncomeChart = ({ data }) => {
   const [isTypeOpen, setIsTypeOpen] = useState(false);
 
   const chartRef = useRef(null);
+  const isFirstRender = useRef(true);
 
   const periodMapping = {
     Weekly: "week",
@@ -28,7 +29,6 @@ const IncomeChart = ({ data }) => {
     Yearly: "year",
   };
 
-  const isFirstRender = useRef(true);
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -38,6 +38,7 @@ const IncomeChart = ({ data }) => {
     if (apiPeriod) {
       dispatch(transactionActions.getTransactionReport({ period: apiPeriod }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPeriod]);
 
   useEffect(() => {

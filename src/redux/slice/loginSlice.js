@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {authService} from "../../services/authService.js";
 import {userService} from "../../services/userService.js";
+import api from "../../services/api.js";
 
 /**
  * Redux slice for managing login authentication status.
@@ -20,25 +21,16 @@ const initialState = {
     error: null,
 };
 
-const loginUser = createAsyncThunk(
-    "auth/loginUser",
-    async (payload, { rejectWithValue }) => {
-        try {
-            const data = await authService.login(payload);
-            const profile = await userService.getProfile();
-            return {
-                token:      data.token,
-                has_pin:    data.has_pin,
-                full_name:  data.full_name,
-                ...profile,
-            };
-        } catch (error) {
-            return rejectWithValue(
-                error.response?.data?.message || "Login failed. Please check your account again."
-            );
-        }
-    },
-);
+const loginUser = createAsyncThunk("auth/loginUser", async (payload, { rejectWithValue }) => {
+    try {
+        const data = await authService.login(payload);
+        api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+        const profile = await userService.getProfile();
+        return { token: data.token, has_pin: data.has_pin, ...profile };
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Login failed.");
+    }
+});
 
 const logoutUser = createAsyncThunk(
     "auth/logoutUser",

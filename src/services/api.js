@@ -13,7 +13,7 @@ api.interceptors.request.use(
     (config) => {
         const state = JSON.parse(localStorage.getItem("persist:ew-DB") || "{}");
         const loginState = state.loginReducer ? JSON.parse(state.loginReducer) : null;
-        const token = loginState?.loginUser?.token;
+        const token = loginState?.token;
         console.log(token);
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;

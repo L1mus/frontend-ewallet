@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router";
 import { AuthLayout } from "../../components/templates/AuthLayout";
@@ -15,7 +15,6 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { registerActions } from "../../redux/slice/registerSlice";
-import { isEmailExists } from "../../utils/storage";
 import { toast } from "react-toastify";
 
 /**
@@ -27,7 +26,7 @@ import { toast } from "react-toastify";
 
 const schemaValidasiRegister = z
   .object({
-    name: z.string().trim().min(1, { message: "Fullname is required" }),
+    full_name: z.string().trim().min(1, { message: "Fullname is required" }),
     email: z
       .string({ message: "Email must be String" })
       .min(1, { message: "Email is required" })
@@ -48,54 +47,26 @@ const schemaValidasiRegister = z
 
 const Register = () => {
   const navigate = useNavigate();
-  const stateLogin = useSelector((state) => state.loginReducer);
-  const stateRegister = useSelector((state) => state.registerReducer);
   const dispatch = useDispatch();
-  const action = registerActions;
+  const stateRegister = useSelector((state) => state.registerReducer);
   const [errorMessage, setErrorMessage] = useState("");
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schemaValidasiRegister) });
-
-  useEffect(() => {
-    if (stateLogin.isLogin) navigate("/");
-  }, [navigate, stateLogin.isLogin]);
+  } = useForm({
+    resolver: zodResolver(schemaValidasiRegister),
+  });
 
   const onSubmit = async (data) => {
-    setErrorMessage("");
-    if (isEmailExists(data.email)) {
-      setErrorMessage(
-        "This email is already registered. Please use a different email address.",
-      );
-      return;
-    }
-    const newUser = {
-      id: stateRegister.lastId,
-      username: data.name,
-      email: data.email,
-      password: data.password,
-      phone: "",
-      pin: "",
-      balance: 0,
-      isVerified: true,
-      profilePicture: `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=random`,
-    };
-
     try {
-      const result = await dispatch(action.registerUser(newUser)).unwrap();
-      toast.success(`Register success, Welcome, ${result.username}!`, {
-        autoClose: 2000,
-      });
-      navigate("/auth/login");
-    } catch (error) {
-      setErrorMessage(error || "Register Failed");
+      await dispatch(registerActions.registerUser(data)).unwrap();
+      toast.success("Registration successful!", { autoClose: 1500 });
+      navigate("/auth/create-pin", { state: { email: data.email } });
+    } catch (err) {
+      setErrorMessage(err || "Registration failed");
     }
-  };
-
-  const handleOnchangeEmail = () => {
-    setErrorMessage("");
   };
 
   return (
@@ -122,11 +93,11 @@ const Register = () => {
           noValidate
         >
           <Input
-            {...register("name", { required: true })}
+            {...register("full_name", { required: true })}
             label="Full Name"
             placeholder="Enter Your Name"
             icon={iconUser}
-            error={errors.name?.message}
+            error={errors.full_name?.message}
             disabled={stateRegister.isLoading}
           />
 
@@ -138,7 +109,6 @@ const Register = () => {
             {...register("email", {
               required: true,
             })}
-            onChange={handleOnchangeEmail}
             error={errors.email?.message || errorMessage}
             disabled={stateRegister.isLoading}
           />
@@ -157,14 +127,14 @@ const Register = () => {
           />
 
           <Input
-            label="confirmPassword"
+            label="Confirm Password"
             type="password"
             placeholder="Confirm Password"
             icon={iconPassword}
-            {...register("confirmpassword", {
+            {...register("confirm_password", {
               required: true,
             })}
-            error={errors.confirmpassword?.message}
+            error={errors.confirm_password?.message}
             disabled={stateRegister.isLoading}
           />
 

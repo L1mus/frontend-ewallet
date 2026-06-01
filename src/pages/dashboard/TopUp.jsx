@@ -9,53 +9,61 @@ import Button from "../../components/atoms/Button";
 import Avatar from "../../components/atoms/Avatar";
 import InputRadio from "../../components/atoms/InputRadio";
 import { transactionActions } from "../../redux/slice/transactionSlice";
-import { loginActions } from "../../redux/slice/loginSlice";
 
 const TopUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { loginUser: user } = useSelector((state) => state.loginReducer);
   const { isLoading } = useSelector((state) => state.transactionReducer);
   const [nominal, setNominal] = useState("");
-  const [selectedMethod, setSelectedMethod] = useState("bri");
+  const [selectedMethod, setSelectedMethod] = useState(1);
 
   const paymentMethods = [
-    { id: "bri", name: "Bank Rakyat Indonesia", logo: "/bri.png" },
-    { id: "dana", name: "Dana", logo: "/dana.png" },
-    { id: "bca", name: "Bank Central Asia", logo: "/bca.png" },
-    { id: "gopay", name: "Gopay", logo: "/gopay.png" },
-    { id: "ovo", name: "Ovo", logo: "/ovo.png" },
+    { id: 1, code: "bri", name: "Bank Rakyat Indonesia", logo: "/bri.png" },
+    { id: 2, code: "bca", name: "Bank Central Asia", logo: "/bca.png" },
+    { id: 3, code: "dana", name: "Dana", logo: "/dana.png" },
+    { id: 4, code: "gopay", name: "Gopay", logo: "/gopay.png" },
+    { id: 5, code: "ovo", name: "Ovo", logo: "/ovo.png" },
   ];
 
-  const orderAmount = nominal ? parseInt(nominal) : 0;
-  const tax = orderAmount > 0 ? Math.floor(orderAmount * 0.1) : 0;
-  const subTotal = orderAmount > 0 ? orderAmount + tax : 0;
+  const amountNum = parseFloat(nominal) || 0;
+  const adminFee = amountNum > 0 ? 1000 : 0;
+  const tax = amountNum * 0.1;
+  const subTotal = amountNum + adminFee + tax;
 
-  const formatIdr = (number) => new Intl.NumberFormat("id-ID").format(number);
+  const formatIdr = (val) => {
+    return new Intl.NumberFormat("id-ID").format(val);
+  };
 
-  const handleSubmit = async () => {
-    if (!orderAmount || orderAmount < 10000) {
-      return toast.error("Minimum top-up: Rp 10.000");
+  const handleNominalChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setNominal(value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!nominal || amountNum <= 0) {
+      toast.error("Please enter a valid top-up amount.");
+      return;
     }
 
-    const selectedMethodName = paymentMethods.find(
-      (m) => m.id === selectedMethod,
-    )?.name;
+    if (!selectedMethod) {
+      toast.error("Please select a payment method.");
+      return;
+    }
+
+    const payload = {
+      payment_method_id: parseInt(selectedMethod),
+      amount: parseFloat(nominal),
+    };
 
     try {
-      const result = await dispatch(
-        transactionActions.topUp({
-          amount: orderAmount,
-          paymentMethod: selectedMethodName,
-        }),
-      ).unwrap();
-      dispatch(loginActions.syncActiveSession({ balance: result.newBalance }));
-      toast.success("Top-up Successful!");
-      setNominal("");
+      await dispatch(transactionActions.topUp(payload)).unwrap();
+      toast.success("Permintaan Top-Up Berhasil!");
       navigate("/dashboard");
-    } catch (err) {
-      toast.error(err || "Top-up failed");
+    } catch (error) {
+      toast.error(error || "Gagal melakukan top up");
     }
   };
 
@@ -74,12 +82,12 @@ const TopUp = () => {
             </h3>
             <div className="bg-grey-light rounded-xl p-4 flex items-center gap-4">
               <Avatar
-                imageSrc={user?.profilePicture}
+                imageSrc={user?.profile_picture_url}
                 className="w-21 h-21 rounded-xl object-cover shadow-sm"
               />
               <div className="flex flex-col items-start gap-1">
                 <span className="font-bold text-black text-base">
-                  {user?.username}
+                  {user?.full_name}
                 </span>
                 <span className="text-grey text-sm">{user?.phone || "-"}</span>
                 {user?.isVerified && (
@@ -109,7 +117,7 @@ const TopUp = () => {
                     e.preventDefault();
                   }
                 }}
-                onChange={(e) => setNominal(e.target.value)}
+                onChange={handleNominalChange}
                 disabled={isLoading}
                 placeholder="Enter Nominal Transfer"
                 className="w-full border border-grey-light rounded-xl pl-12 pr-4 py-3.5 outline-none text-grey font-medium focus:border-primary transition-colors shadow-sm"
@@ -133,7 +141,7 @@ const TopUp = () => {
                   labelName={method.name}
                   logo={method.logo}
                   checked={selectedMethod === method.id}
-                  onChange={(e) => setSelectedMethod(e.target.value)}
+                  onChange={(e) => setSelectedMethod(parseInt(e.target.value))}
                   disabled={isLoading}
                 />
               ))}
@@ -149,12 +157,12 @@ const TopUp = () => {
               <div className="flex justify-between items-center">
                 <span className="text-grey text-sm font-medium">Order</span>
                 <span className="text-black font-bold text-sm">
-                  Rp. {formatIdr(orderAmount)}
+                  Rp. {formatIdr(amountNum)}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-grey text-sm font-medium">Delivery</span>
-                <span className="text-black font-bold text-sm">Rp. 0</span>
+                <span className="text-grey text-sm font-medium">Fee</span>
+                <span className="text-black font-bold text-sm">Rp. {formatIdr(adminFee)}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-grey text-sm font-medium">Tax</span>

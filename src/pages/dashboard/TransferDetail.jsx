@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Banknote, BadgeCheck, Star } from "lucide-react";
 import Avatar from "../../components/atoms/Avatar";
@@ -8,8 +8,6 @@ import Stepper from "../../components/molecules/Stepper";
 import ModalPin from "../../components/organism/ModalPin";
 import ModalStatus from "../../components/organism/ModalStatus";
 import Input from "../../components/atoms/Input";
-import { transactionActions } from "../../redux/slice/transactionSlice";
-import { loginActions } from "../../redux/slice/loginSlice";
 
 import ArrowLeftRight from "../../assets/icons/Send.svg?react";
 import Bill from "../../assets/icons/u_money-bill.svg";
@@ -18,7 +16,6 @@ import Button from "../../components/atoms/Button";
 const TransferDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const receiver = location.state?.receiver;
 
@@ -31,68 +28,44 @@ const TransferDetail = () => {
 
   const [statusModal, setStatusModal] = useState({
     isOpen: false,
-    status: null,
+    status: "success",
   });
 
   useEffect(() => {
     if (!receiver) {
+      toast.error("Please select a recipient first.");
       navigate("/transfer");
     }
   }, [receiver, navigate]);
 
-  useEffect(() => {
-    if (sender && !sender.pin) {
-      toast.info("Create a security PIN first to make a transfer.");
-      navigate("/auth/create-pin");
-    }
-  }, [sender, navigate]);
-
   const handleOpenPinModal = () => {
-    const nominal = parseInt(amount);
-    if (!nominal || nominal < 10000) {
-      return toast.error("Minimum transfer: Rp 10,000");
+    const amountNum = parseFloat(amount);
+    if (!amount || amountNum <= 0) {
+      toast.error("Please enter a valid amount.");
+      return;
     }
-    if (nominal > sender?.balance) {
-      return toast.error("Insufficient balance");
+    if (sender && amountNum > sender.balance) {
+      toast.error("Insufficient balance.");
+      return;
     }
     setIsPinModalOpen(true);
   };
 
-  const handleConfirmTransfer = async (pin) => {
-    if (pin !== sender?.pin) {
-      return toast.error("The PIN you entered is incorrect");
-    }
-
+  const handleConfirmTransfer = () => {
     setIsPinModalOpen(false);
-
-    try {
-      const result = await dispatch(
-        transactionActions.transfer({
-          receiverId: receiver.id,
-          receiverName: receiver.username,
-          receiverPhone: receiver.phone,
-          profilePicture: receiver.profilePicture,
-          amount: parseInt(amount),
-          notes,
-        }),
-      ).unwrap();
-
-      dispatch(loginActions.syncActiveSession({ balance: result.newBalance }));
-
-      setStatusModal({ isOpen: true, status: "success" });
-    } catch (err) {
-      console.error("Transfer Error:", err);
-      setStatusModal({ isOpen: true, status: "failed" });
-    }
+    navigate("/auth/enter-pin", {
+      state: {
+        type: "TRANSFER",
+        receiver_id: receiver?.id,
+        amount: amount,
+        notes: notes,
+      },
+    });
   };
 
   const handleCloseStatusModal = () => {
-    const isSuccess = statusModal.status === "success";
-    setStatusModal({ isOpen: false, status: null });
-    dispatch(transactionActions.clearError());
-    dispatch(transactionActions.clearCurrentTransaction());
-
-    if (isSuccess) {
+    setStatusModal((prev) => ({ ...prev, isOpen: false }));
+    if (statusModal.status === "success") {
       navigate("/dashboard");
     }
   };
@@ -121,12 +94,12 @@ const TransferDetail = () => {
           <div className="bg-gray-100 rounded-xl p-4 flex items-center justify-between border border-grey-light">
             <div className="flex items-center gap-4">
               <Avatar
-                imageSrc={receiver?.profilePicture}
+                imageSrc={receiver?.profile_picture_url}
                 className=" w-16 h-16 md:w-21 md:h-21 rounded-xl object-cover shadow-sm"
               />
               <div className="flex flex-col items-start">
                 <span className="font-semibold text-black text-xs md:text-base">
-                  {receiver?.username}
+                  {receiver?.full_name}
                 </span>
                 <span className="text-grey text-xs md:text-base">
                   {receiver?.phone || "-"}
@@ -199,14 +172,14 @@ const TransferDetail = () => {
         isOpen={isPinModalOpen}
         onClose={() => setIsPinModalOpen(false)}
         onConfirm={handleConfirmTransfer}
-        transferToName={receiver?.username}
+        transferToName={receiver?.full_name}
       />
 
       <ModalStatus
         isOpen={statusModal.isOpen}
         onClose={handleCloseStatusModal}
         status={statusModal.status}
-        transferToName={receiver?.username}
+        transferToName={receiver?.full_name}
         primaryAction={{
           label:
             statusModal.status === "success"

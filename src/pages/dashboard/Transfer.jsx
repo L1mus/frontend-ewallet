@@ -8,7 +8,6 @@ import Avatar from "../../components/atoms/Avatar";
 import Stepper from "../../components/molecules/Stepper";
 import Send from "../../assets/icons/Send.svg?react";
 import Input from "../../components/atoms/Input";
-import { mockDatabase } from "../../data/mockDatabase";
 
 const Transfer = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,8 +19,11 @@ const Transfer = () => {
 
   const allUsers = useMemo(() => {
     const userMap = new Map();
-    mockDatabase.users.forEach((u) => userMap.set(u.email, u));
-    registerUser.forEach((u) => userMap.set(u.email, u));
+    if (Array.isArray(registerUser)) {
+      registerUser.forEach((u) => {
+        if (u.email) userMap.set(u.email, u);
+      });
+    }
     return Array.from(userMap.values());
   }, [registerUser]);
 
@@ -29,19 +31,11 @@ const Transfer = () => {
     return allUsers.filter((user) => {
       const isNotMe = user.email !== loginUser?.email;
       const query = searchQuery.toLowerCase();
-      const matchSearch =
-        !query ||
-        user.username?.toLowerCase().includes(query) ||
-        user.phone?.includes(query);
-      return isNotMe && matchSearch;
+      const matchName = user.full_name?.toLowerCase().includes(query);
+      const matchPhone = user.phone?.includes(query);
+      return isNotMe && (matchName || matchPhone);
     });
   }, [allUsers, loginUser, searchQuery]);
-
-  const handleUserSelect = (receiverData) => {
-    navigate(`/transfer/${receiverData.id}`, {
-      state: { receiver: receiverData },
-    });
-  };
 
   const handleSearchChange = (e) => {
     const val = e.target.value;
@@ -93,18 +87,18 @@ const Transfer = () => {
               filteredPeople.map((item, index) => (
                 <TableContent
                   key={index}
-                  onClick={() => handleUserSelect(item)}
+                  onClick={() => navigate("/transfer/detail", { state: { receiver: item } })}
                   className={`cursor-pointer hover:bg-primary/5 transition-colors ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
                 >
                   <td className="px-2 py-4 md:px-6">
                     <div className="flex items-center gap-3 md:gap-6">
                       <Avatar
-                        imageSrc={item.profilePicture}
+                        imageSrc={item.profile_picture_url}
                         className="w-12 h-12 rounded-lg shrink-0"
                       />
                       <div className="flex flex-row justify-between items-center flex-1">
                         <span className="text-grey font-bold md:font-medium">
-                          {item.username}
+                          {item.full_name}
                         </span>
                         <span className="text-grey text-sm mt-0.5">
                           {item.phone || `-`}

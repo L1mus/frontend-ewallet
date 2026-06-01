@@ -110,127 +110,58 @@ const registerSlice = createSlice({
   name: "authRegister",
   initialState,
   reducers: {
-    clearError: (prevState) => {
-      return {
-        ...prevState,
-        error: initialState.error,
-      };
-    },
-    updateBalance: (state, action) => {
-      const { userId, newBalance } = action.payload;
-      const userIdx = state.registerUser.findIndex((u) => u.id === userId);
-      if (userIdx !== -1) {
-        state.registerUser[userIdx].balance = newBalance;
-      }
+    clearError: (state) => {
+      state.error = null;
+      state.successMsg = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // registerUser
-      .addCase(registerUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.registerUser.push(action.payload);
-        state.lastId++;
-        state.successMsg = `Register success, Welcome ${action.payload?.username}`;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-
-      // forgotPasswordUser
-      .addCase(forgotPasswordUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        const idx = state.registerUser.findIndex(
-          (u) => u.email === action.payload.email,
-        );
-        if (idx !== -1) {
-          state.registerUser[idx] = {
-            ...state.registerUser[idx],
-            ...action.payload,
-          };
-        }
-        state.successMsg = `Email sending to ${action.payload?.email}`;
-      })
-      // Create PIN
-      .addCase(createPinUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        const idx = state.registerUser.findIndex(
-          (u) => u.email === action.payload.email,
-        );
-        if (idx !== -1) {
-          state.registerUser[idx] = {
-            ...state.registerUser[idx],
-            pin: action.payload.pin,
-          };
-        }
-        state.successMsg = "PIN created successfully";
-      })
-      // Update Profile
-      .addCase(updateProfileUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        const idx = state.registerUser.findIndex(
-          (u) => u.email === action.payload.email,
-        );
-        if (idx !== -1) {
-          state.registerUser[idx] = {
-            ...state.registerUser[idx],
-            ...action.payload,
-          };
-        }
-        state.successMsg = "Profil berhasil diperbarui!";
-      })
-      // Change Password
-      .addCase(changePasswordUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        const idx = state.registerUser.findIndex(
-          (u) => u.email === action.payload.email,
-        );
-        if (idx !== -1) {
-          state.registerUser[idx] = {
-            ...state.registerUser[idx],
-            password: action.payload.password,
-          };
-        }
-        state.successMsg = "Kata sandi berhasil diubah!";
-      })
-      //Change PIN
-      .addCase(changePinUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        const idx = state.registerUser.findIndex(
-          (u) => u.email === action.payload.email,
-        );
-        if (idx !== -1) {
-          state.registerUser[idx] = {
-            ...state.registerUser[idx],
-            pin: action.payload.pin,
-          };
-        }
-        state.successMsg = "PIN keamanan berhasil diubah!";
-      })
-      .addMatcher(
-        (action) =>
-          action.type.startsWith("authRegister/") &&
-          action.type.endsWith("/pending"),
-        (state) => {
-          state.isLoading = true;
-          state.error = null;
-          state.successMsg = null;
-        },
-      )
-      .addMatcher(
-        (action) =>
-          action.type.startsWith("authRegister/") &&
-          action.type.endsWith("/rejected"),
-        (state, action) => {
+        // Register
+        .addCase(registerUser.fulfilled, (state) => {
           state.isLoading = false;
-          state.error = action.payload;
-        },
-      );
+          state.successMsg = "Registration successful! Please log in to your account.";
+        })
+        // Forgot Password
+        .addCase(forgotPasswordUser.fulfilled, (state) => {
+          state.isLoading = false;
+          state.successMsg = "A password recovery link has been sent to your email.";
+        })
+        // Reset Password
+        .addCase(resetPasswordUser.fulfilled, (state) => {
+          state.isLoading = false;
+          state.successMsg = "Your password has been successfully updated.";
+        })
+        // Update Profile
+        .addCase(updateProfileUser.fulfilled, (state) => {
+          state.isLoading = false;
+          state.successMsg = "Your profile has been successfully updated!";
+        })
+        // Change Password
+        .addCase(changePasswordUser.fulfilled, (state) => {
+          state.isLoading = false;
+          state.successMsg = "Password successfully changed!";
+        })
+        // Change PIN
+        .addCase(changePinUser.fulfilled, (state) => {
+          state.isLoading = false;
+          state.successMsg = "Your PIN has been successfully updated!";
+        })
+        .addMatcher(
+            (action) => action.type.startsWith("authRegister/") && action.type.endsWith("/pending"),
+            (state) => {
+              state.isLoading = true;
+              state.error = null;
+              state.successMsg = null;
+            },
+        )
+        .addMatcher(
+            (action) => action.type.startsWith("authRegister/") && action.type.endsWith("/rejected"),
+            (state, action) => {
+              state.isLoading = false;
+              state.error = action.payload;
+            },
+        );
   },
 });
 

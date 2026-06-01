@@ -1,10 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import apiRegister from "../../api/asyncRegister";
-import apiForgotPassword from "../../api/asyncForgotPassword";
-import apiCreatePin from "../../api/asyncCreatePin";
-import apiUpdateProfile from "../../api/asyncUpdateProfile";
-import apiChangePassword from "../../api/asyncChangePassword";
-import apiChangePin from "../../api/asyncChangePin";
+import { authService } from "../../services/authService.js";
+import { userService } from "../../services/userService.js";
 
 /**
  * Redux slice for managing registration and account recovery (forgot password, PIN creation).
@@ -17,86 +13,97 @@ import apiChangePin from "../../api/asyncChangePin";
  */
 
 const initialState = {
-  registerUser: [],
-  lastId: 0,
   isLoading: false,
   successMsg: null,
   error: null,
 };
 
 const registerUser = createAsyncThunk(
-  "authRegister/registerUser ",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await apiRegister(payload);
-      return data;
-    } catch (error) {
-      console.log(error);
-      return rejectWithValue(error);
-    }
-  },
+    "authRegister/registerUser",
+    async (payload, { rejectWithValue }) => {
+      try {
+        const data = await authService.register(payload);
+        return data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Registration failed");
+      }
+    },
 );
 
 const forgotPasswordUser = createAsyncThunk(
-  "authRegister/forgotPasswordUser",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await apiForgotPassword(payload);
-      const newData = { ...data, password: 12345678 };
-      return newData;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
+    "authRegister/forgotPasswordUser",
+    async (payload, { rejectWithValue }) => {
+      try {
+        const data = await authService.forgotPassword(payload);
+        return data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to send recovery email");
+      }
+    },
 );
 
 const createPinUser = createAsyncThunk(
-  "authRegister/createPinUser",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await apiCreatePin(payload);
-      const newData = { ...data, password: 12345678 };
-      return newData;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
+    "authRegister/createPinUser",
+    async (payload, { rejectWithValue }) => {
+      try {
+        const data = await userService.changePin({
+          current_pin: "",
+          new_pin: payload.pin,
+          confirm_new_pin: payload.pin
+        });
+        return data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to create PIN");
+      }
+    },
 );
 
 const updateProfileUser = createAsyncThunk(
-  "authRegister/updateProfileUser",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await apiUpdateProfile(payload);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message || error);
-    }
-  },
+    "authRegister/updateProfileUser",
+    async (payload, { rejectWithValue }) => {
+      try {
+        const data = await userService.updateProfile(payload);
+        return data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to update profile");
+      }
+    },
 );
 
-export const changePasswordUser = createAsyncThunk(
-  "authRegister/changePasswordUser",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await apiChangePassword(payload);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
+const changePasswordUser = createAsyncThunk(
+    "authRegister/changePasswordUser",
+    async (payload, { rejectWithValue }) => {
+      try {
+        const data = await userService.changePassword(payload);
+        return data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to change password");
+      }
+    },
 );
 
 const changePinUser = createAsyncThunk(
-  "authRegister/changePinUser",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await apiChangePin(payload);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message || error);
-    }
-  },
+    "authRegister/changePinUser",
+    async (payload, { rejectWithValue }) => {
+      try {
+        const data = await userService.changePin(payload);
+        return data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to update PIN");
+      }
+    },
+);
+
+const resetPasswordUser = createAsyncThunk(
+    "authRegister/resetPasswordUser",
+    async (payload, { rejectWithValue }) => {
+      try {
+        const data = await authService.resetPassword(payload);
+        return data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to reset password");
+      }
+    },
 );
 
 const registerSlice = createSlice({

@@ -58,61 +58,49 @@ const topUp = createAsyncThunk(
 );
 
 const transactionSlice = createSlice({
-  name: "transaction",
-  initialState,
-  reducers: {
-    clearCurrentTransaction: (state) => {
-      state.currentTransaction = null;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
-    removeTransaction: (state, action) => {
-      state.transactions = state.transactions.filter(
-        (tx) => tx.id !== action.payload,
-      );
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      //Transfer
-      .addCase(transfer.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.transactions.unshift(action.payload.transaction);
-        state.currentTransaction = action.payload.transaction;
-        state.successMsg = "Transfer successful!";
-      })
-
-      // TopUp
-      .addCase(topUp.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.transactions.unshift(action.payload.transaction);
-        state.currentTransaction = action.payload.transaction;
-        state.successMsg = "Top-up successful!";
-      })
-      .addCase("authLogin/logoutUser", () => initialState)
-
-      //shared pending & rejected via addMatcher
-      .addMatcher(
-        (action) =>
-          action.type.startsWith("transaction/") &&
-          action.type.endsWith("/pending"),
-        (state) => {
-          state.isLoading = true;
-          state.error = null;
-          state.successMsg = null;
+    name: "transaction",
+    initialState,
+    reducers: {
+        clearCurrentTransaction: (state) => { state.currentTransaction = null; },
+        clearError: (state) => {
+            state.error = null;
+            state.successMsg = null;
         },
-      )
-      .addMatcher(
-        (action) =>
-          action.type.startsWith("transaction/") &&
-          action.type.endsWith("/rejected"),
-        (state, action) => {
-          state.isLoading = false;
-          state.error = action.payload;
+        removeTransaction: (state, action) => {
+            state.transactions = state.transactions.filter(
+                (tx) => tx.id !== action.payload,
+            );
         },
-      );
-  },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(transfer.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.currentTransaction = action.payload;
+                state.successMsg = "Transfer successfully sent!";
+            })
+            .addCase(topUp.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.currentTransaction = action.payload;
+                state.successMsg = "top-up successfully!";
+            })
+            .addCase("authLogin/logoutUser/fulfilled", () => initialState)
+            .addMatcher(
+                (action) => action.type.startsWith("transaction/") && action.type.endsWith("/pending"),
+                (state) => {
+                    state.isLoading = true;
+                    state.error = null;
+                    state.successMsg = null;
+                },
+            )
+            .addMatcher(
+                (action) => action.type.startsWith("transaction/") && action.type.endsWith("/rejected"),
+                (state, action) => {
+                    state.isLoading = false;
+                    state.error = action.payload;
+                },
+            );
+    },
 });
 
 export const transactionActions = {

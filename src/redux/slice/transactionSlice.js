@@ -65,6 +65,30 @@ const getTransactionReport = createAsyncThunk(
     }
 );
 
+const getTransactionHistory = createAsyncThunk(
+    "transaction/getTransactionHistory",
+    async (params = {}, { rejectWithValue }) => {
+        try {
+            const result = await userService.getTransactionHistory(params);
+            return result.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Failed to get history.");
+        }
+    }
+);
+
+const deleteTransactionHistory = createAsyncThunk(
+    "transaction/deleteTransactionHistory",
+    async (id, { rejectWithValue }) => {
+        try {
+            return id;
+        } catch (err) {
+            console.error(err)
+            return rejectWithValue("Failed to delete transaction.");
+        }
+    }
+);
+
 const transactionSlice = createSlice({
     name: "transaction",
     initialState,

@@ -24,7 +24,6 @@ import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const action = loginActions;
   const stateLogin = useSelector((state) => state.loginReducer);
   const [authError, setAuthError] = useState("");
   const {
@@ -34,11 +33,15 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    setAuthError("");
     try {
-      await dispatch(action.loginUser(data)).unwrap();
-      toast.success("Login Success", { autoClose: 2000 });
-      navigate("/");
+      setAuthError("");
+      const user = await dispatch(loginActions.loginUser(data)).unwrap();
+      toast.success("Login Success", { autoClose: 1000 });
+      if (!user.has_pin) {
+        navigate("/auth/create-pin");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       toast.error(error.message || "Login Failed", { autoClose: 2500 });
     }

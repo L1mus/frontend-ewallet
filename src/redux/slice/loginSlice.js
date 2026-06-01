@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import apiLogin from "../../api/asyncLogin";
+import {authService} from "../../services/authService.js";
+import {userService} from "../../services/userService.js";
 
 /**
  * Redux slice for managing login authentication status.
@@ -12,22 +13,43 @@ import apiLogin from "../../api/asyncLogin";
  */
 
 const initialState = {
-  loginUser: null,
-  isLogin: false,
-  isLoading: false,
-  error: null,
-  successMsg: "",
+    loginUser: null,
+    token: null,
+    isLogin: false,
+    isLoading: false,
+    error: null,
 };
+
 const loginUser = createAsyncThunk(
-  "auth/loginUser",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await apiLogin(payload);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
+    "auth/loginUser",
+    async (payload, { rejectWithValue }) => {
+        try {
+            const data = await authService.login(payload);
+            const profile = await userService.getProfile();
+            return {
+                token:      data.token,
+                has_pin:    data.has_pin,
+                full_name:  data.full_name,
+                ...profile,
+            };
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "Login failed. Please check your account again."
+            );
+        }
+    },
+);
+
+const logoutUser = createAsyncThunk(
+    "auth/logoutUser",
+    async (_, { rejectWithValue }) => {
+        try {
+            await authService.logout();
+        } catch (error) {
+            console.error("Logout error:", error);
+            return rejectWithValue(error.response?.data?.message || "Logout failed");
+        }
+    },
 );
 
 const loginSlice = createSlice({

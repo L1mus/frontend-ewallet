@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import apiTransfer from "../../api/asyncTransfer";
-import apiTopUp from "../../api/asyncTopup";
+import {transactionService} from "../../services/transactionService.js";
 
 /**
  * Redux slice for managing transaction data (Transfers & Top-Ups).
@@ -13,11 +12,11 @@ import apiTopUp from "../../api/asyncTopup";
  */
 
 const initialState = {
-  transactions: [],
-  currentTransaction: null,
-  isLoading: false,
-  error: null,
-  successMsg: null,
+    transactions: [],
+    currentTransaction: null,
+    isLoading: false,
+    error: null,
+    successMsg: null,
 };
 
 /**
@@ -26,28 +25,17 @@ const initialState = {
  * so the balance does not need to be passed manually from the component.
  */
 const transfer = createAsyncThunk(
-  "transaction/transfer",
-  async (payload, { getState, rejectWithValue }) => {
-    try {
-      const { loginReducer } = getState();
-      const sender = loginReducer.loginUser;
-
-      const data = await apiTransfer({
-        senderId: sender.id,
-        senderBalance: sender.balance,
-        receiverId: payload.receiverId,
-        receiverNameSnapshot: payload.receiverName,
-        receiverPhoneSnapshot: payload.receiverPhone,
-        profilePicture: payload.profilePicture,
-        amount: payload.amount,
-        notes: payload.notes,
-      });
-
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
+    "transaction/transfer",
+    async (payload, { rejectWithValue }) => {
+        try {
+            const data = await transactionService.transfer(payload);
+            return data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "Transfer transaction failed to process."
+            );
+        }
+    },
 );
 
 /**
@@ -56,26 +44,17 @@ const transfer = createAsyncThunk(
  * with the data currently active in the login session.
  */
 const topUp = createAsyncThunk(
-  "transaction/topUp",
-  async (payload, { getState, rejectWithValue }) => {
-    try {
-      const { loginReducer } = getState();
-      const currentUser = loginReducer.loginUser;
-
-      const data = await apiTopUp({
-        userId: currentUser.id,
-        usernameSnapshot: currentUser.username,
-        profilePicture: currentUser.profilePicture,
-        currentBalance: currentUser.balance,
-        amount: payload.amount,
-        paymentMethod: payload.paymentMethod,
-      });
-
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
+    "transaction/topUp",
+    async (payload, { rejectWithValue }) => {
+        try {
+            const data = await transactionService.topup(payload);
+            return data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "Top-up failed."
+            );
+        }
+    },
 );
 
 const transactionSlice = createSlice({

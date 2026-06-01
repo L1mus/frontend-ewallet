@@ -53,56 +53,48 @@ const logoutUser = createAsyncThunk(
 );
 
 const loginSlice = createSlice({
-  name: "authLogin",
-  initialState,
-  reducers: {
-    logoutUser: (prevState) => {
-      return {
-        ...prevState,
-        loginUser: null,
-        isLogin: false,
-      };
+    name: "authLogin",
+    initialState,
+    reducers: {
+        clearError: (state) => { state.error = null; },
+        updateUserPin: (state) => {
+            if (state.loginUser) state.loginUser.has_pin = true;
+        },
+        syncActiveSession: (state, action) => {
+            if (state.loginUser) {
+                state.loginUser = { ...state.loginUser, ...action.payload };
+            }
+        },
     },
-    clearError: (prevState) => {
-      return {
-        ...prevState,
-        error: null,
-      };
+    extraReducers: (builder) => {
+        builder
+            .addCase(loginUser.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(loginUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isLogin = true;
+                state.token = action.payload.token;
+                state.loginUser = action.payload;
+            })
+            .addCase(loginUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+            .addCase(logoutUser.fulfilled, () => ({
+                ...initialState,
+            }))
+            .addCase(logoutUser.rejected, () => ({
+                ...initialState,
+            }));
     },
-    updateUserPin: (state, action) => {
-      if (state.loginUser) {
-        state.loginUser.pin = action.payload;
-      }
-    },
-    syncActiveSession: (state, action) => {
-      if (state.loginUser) {
-        state.loginUser = { ...state.loginUser, ...action.payload };
-      }
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-        state.successMsg = "";
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isLogin = true;
-        state.loginUser = action.payload;
-        state.successMsg = "Login Success";
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      });
-  },
 });
 
 export const loginActions = {
   ...loginSlice.actions,
   loginUser,
+  logoutUser,
 };
 
 export default loginSlice.reducer;

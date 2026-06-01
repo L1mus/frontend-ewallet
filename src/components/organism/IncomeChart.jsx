@@ -79,7 +79,7 @@ const IncomeChart = ({ data }) => {
                 <ChevronDown className="w-4 h-4 text-grey" />
               </button>
               {isPeriodOpen && (
-                  <div className="absolute right-0 mt-2 w-32 sm:w-40 bg-white border border-grey-light rounded-xl shadow-lg py-1 z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-200">
+                  <div className="absolute right-0 mt-2 w-32 sm:w-40 bg-white border border-grey-light rounded-xl shadow-lg py-1 z-50 overflow-hidden">
                     {["Weekly", "Monthly", "Yearly"].map((opt) => (
                         <div
                             key={opt}
@@ -109,7 +109,7 @@ const IncomeChart = ({ data }) => {
                 <ChevronDown className="w-4 h-4 text-grey" />
               </button>
               {isTypeOpen && (
-                  <div className="absolute right-0 mt-2 w-32 sm:w-40 bg-white border border-grey-light rounded-xl shadow-lg py-1 z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-200">
+                  <div className="absolute right-0 mt-2 w-32 sm:w-40 bg-white border border-grey-light rounded-xl shadow-lg py-1 z-50 overflow-hidden">
                     {["Income", "Expense"].map((opt) => (
                         <div
                             key={opt}
@@ -128,7 +128,7 @@ const IncomeChart = ({ data }) => {
           </div>
         </div>
 
-        <div className="w-full h-75 sm:h-87.5 md:h-100">
+        <div style={{ width: "100%", height: 350 }}>
           {chartData.length === 0 ? (
               <div className="w-full h-full flex items-center justify-center text-grey text-sm italic">
                 No data available for this period.
@@ -138,7 +138,7 @@ const IncomeChart = ({ data }) => {
                 <BarChart
                     data={chartData}
                     barSize={40}
-                    margin={{ top: 10, right: 0, left: 0, bottom: 20 }}
+                    margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
                 >
                   <CartesianGrid
                       strokeDasharray="3 3"

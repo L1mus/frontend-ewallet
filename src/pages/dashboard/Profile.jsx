@@ -20,7 +20,7 @@ const Profile = () => {
   const actionRegister = registerActions;
 
   const [formData, setFormData] = useState({
-    fullName: loginUser?.username || "",
+    full_name: loginUser?.full_name || "",
     phone: loginUser?.phone || "",
     email: loginUser?.email || "",
   });
@@ -32,22 +32,20 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.fullName) return toast.error("Name is required");
+    if (!formData.full_name) return toast.error("Name is required");
 
     try {
-      const payload = {
-        email: loginUser.email,
-        username: formData.fullName,
-        phone: formData.phone,
-      };
-
-      const result = await dispatch(
-        actionRegister.updateProfileUser(payload),
+      const updatedData = await dispatch(
+          actionRegister.updateProfileUser({
+            email: formData.email,
+            full_name: formData.full_name,
+            phone: formData.phone,
+          })
       ).unwrap();
-      dispatch(actionLogin.syncActiveSession(result));
+      dispatch(actionLogin.syncActiveSession(updatedData));
       toast.success("Profile updated successfully!");
-    } catch (error) {
-      toast.error(error || "Update failed");
+    } catch (err) {
+      toast.error(err || "Failed to update profile");
     }
   };
 
@@ -67,12 +65,12 @@ const Profile = () => {
           </h3>
 
           <div
-            key={loginUser?.username + loginUser?.phone}
+            key={loginUser?.full_name + loginUser?.phone}
             className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6"
           >
             <div className="bg-gray-50 rounded-xl p-3 w-24 h-24 flex items-center justify-center shrink-0 border border-gray-100">
               <Avatar
-                imageSrc={loginUser?.profilePicture}
+                imageSrc={loginUser?.profile_picture_url}
                 className="w-full h-full border-2 border-primary-light"
               />
             </div>
@@ -101,8 +99,8 @@ const Profile = () => {
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <Input
             label="Full Name"
-            name="fullName"
-            value={formData.fullName}
+            name="full_name"
+            value={formData.full_name}
             onChange={handleInputChange}
             placeholder="Enter Full Name"
             disabled={isLoading}

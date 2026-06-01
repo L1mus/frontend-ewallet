@@ -24,6 +24,7 @@ const ForgotPassword = () => {
   const dispatch = useDispatch();
   const action = registerActions;
   const [isSent, setIsSent] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -34,13 +35,9 @@ const ForgotPassword = () => {
     try {
       await dispatch(action.forgotPasswordUser(data)).unwrap();
       setIsSent(true);
-      toast.success(`Email sending to ${data.email}`, {
-        autoClose: 2000,
-      });
-    } catch (error) {
-      toast.error(error || "Failed to send link. Please try again", {
-        autoClose: 2500,
-      });
+      toast.success(`Email link reset password sent successfully!`);
+    } catch (err) {
+      toast.error(err || "Failed to request password reset. Email might not be registered.");
     }
   };
 

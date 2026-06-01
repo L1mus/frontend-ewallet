@@ -22,10 +22,9 @@ const ChangePin = () => {
 
     try {
       const result = await dispatch(
-        registerActions.changePinUser({
-          email: loginUser.email,
-          newPin: pin,
-        }),
+          registerActions.changePinUser({
+            new_pin: pin,
+          }),
       ).unwrap();
 
       dispatch(loginActions.syncActiveSession(result));

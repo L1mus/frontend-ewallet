@@ -18,8 +18,8 @@ const ChangePassword = () => {
   const actionRegister = registerActions;
 
   const [formData, setFormData] = useState({
-    existingPassword: "",
-    newPassword: "",
+    current_password: "",
+    new_password: "",
     confirmPassword: "",
   });
 
@@ -48,22 +48,18 @@ const ChangePassword = () => {
     }
 
     try {
-      const payload = {
-        email: loginUser.email,
-        existingPassword: formData.existingPassword,
-        newPassword: formData.newPassword,
-      };
-
       const result = await dispatch(
-        actionRegister.changePasswordUser(payload),
+          actionRegister.changePasswordUser({
+            current_password: formData.current_password,
+            new_password: formData.new_password,
+          }),
       ).unwrap();
 
       dispatch(actionLogin.syncActiveSession(result));
-
       toast.success("Password successfully updated!");
       navigate("/profile");
     } catch (err) {
-      toast.error(err || "Failed to change password");
+      toast.error(err);
     }
   };
 
@@ -79,12 +75,12 @@ const ChangePassword = () => {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <Input
-            label="Existing Password"
-            name="existingPassword"
+            label="Current Password"
+            name="current_password"
             type="password"
-            value={formData.existingPassword}
+            value={formData.current_password}
             onChange={handleInputChange}
-            placeholder="Enter Your Existing Password"
+            placeholder="Enter Your Current Password"
             disabled={isLoading}
           />
 

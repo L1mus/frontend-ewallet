@@ -16,29 +16,25 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loginUser } = useSelector((state) => state.loginReducer);
-
   const {
     transactions,
     dashboardSummary,
     chartData,
-    isLoading
   } = useSelector((state) => state.transactionReducer);
 
   useEffect(() => {
     dispatch(transactionActions.getUserDashboard());
-    dispatch(transactionActions.getTransactionReport());
+    dispatch(transactionActions.getTransactionReport({ period: "week" }));
+    dispatch(transactionActions.getTransactionHistory());
   }, [dispatch]);
 
-  const balance = dashboardSummary?.balance || 0;
-  const totalIncome = dashboardSummary?.total_income || 0;
-  const totalExpense = dashboardSummary?.total_expenses || 0;
+  const balance = dashboardSummary?.balance ?? 0;
+  const totalIncome = dashboardSummary?.total_income ?? 0;
+  const totalExpense = dashboardSummary?.total_expenses ?? 0;
+  const recentTransactions = (transactions ?? []).slice(0, 4);
 
-  const recentTransactions = transactions
-      .filter(
-          (tx) => tx.sender_id === loginUser?.id || tx.receiver_id === loginUser?.id,
-      )
-      .slice(0, 4);
+  const formatBalance = (val) =>
+      new Intl.NumberFormat("id-ID").format(val ?? 0);
 
   return (
     <div className="w-full">
@@ -47,7 +43,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-3 gap-2 sm:gap-4">
             <CardBalance
               title="Balance"
-              balance={balance}
+              balance={formatBalance(balance)}
               children={<Balance className="w-6 h-6" />}
               Icon={ArrowGrowth}
               iconStyle="text-success"
@@ -56,7 +52,7 @@ const Dashboard = () => {
             />
             <CardBalance
               title="Income"
-              balance={totalIncome}
+              balance={formatBalance(totalIncome)}
               children={<MoneyWithdraw className="w-6 h-6" />}
               Icon={ArrowGrowth}
               iconStyle="text-success"
@@ -65,7 +61,7 @@ const Dashboard = () => {
             />
             <CardBalance
               title="Expense"
-              balance={totalExpense}
+              balance={formatBalance(totalExpense)}
               children={<MoneyWithdraw className="rotate-180 w-6 h-6" />}
               Icon={ArrowGrowth}
               iconStyle="rotate-180 text-danger"
@@ -102,14 +98,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="w-full">
-            {isLoading ? (
-              <div className="w-full h-87.5 sm:h-100 bg-white rounded-xl flex items-center justify-center border border-grey-light shadow-sm">
-                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-              </div>
-            ) : (
-              <IncomeChart data={chartData} />
-            )}
+          <div className="w-full" style={{ minHeight: "420px" }}>
+            <IncomeChart data={chartData} />
           </div>
         </div>
 
@@ -135,26 +125,30 @@ const Dashboard = () => {
           >
             {recentTransactions.length > 0 ? (
                 recentTransactions.map((tx) => {
-                  const isSender = tx.sender_id === loginUser?.id;
+                  const isExpense = tx.type === "expense";
 
-                  const displayName = isSender
-                      ? tx.receiver_name || "Recipient"
-                      : tx.sender_name || "Sender";
+                  const displayName =
+                      tx.receiver_name || (isExpense ? "Recipient" : "Sender");
 
-                  const displayAvatar = isSender
-                      ? tx.receiver_avatar
-                      : tx.sender_avatar;
+                  const displayAvatar =
+                      tx.profile_picture_url || "/defaultAvatar.jpg";
 
                   return (
                       <CardHistory
-                          key={tx.id}
+                          key={tx.transaction_id}
                           name={displayName}
-                          status="Transfer"
+                          status={
+                            tx.activity_type === "topup" ? "Top Up" : "Transfer"
+                          }
                           imageSrc={displayAvatar}
                           amount={
-                            <span className={isSender ? "text-danger" : "text-success"}>
-                        {isSender ? "-" : "+"}Rp{" "}
-                              {(tx.amount || 0).toLocaleString("id-ID")}
+                            <span
+                                className={
+                                  isExpense ? "text-danger" : "text-success"
+                                }
+                            >
+                        {isExpense ? "-" : "+"}Rp{" "}
+                              {new Intl.NumberFormat("id-ID").format(tx.amount ?? 0)}
                       </span>
                           }
                       />

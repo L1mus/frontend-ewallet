@@ -54,4 +54,12 @@ export const userService = {
         const res = await api.get("/users/transfer", { params });
         return { data: res.data.data, meta: res.data.meta };
     },
+
+    createPin: async (payload) => {
+        const res = await api.post("/users/pin/set", {
+            new_pin:         payload.new_pin,
+            confirm_new_pin: payload.confirm_new_pin,
+        });
+        return res.data;
+    },
 };

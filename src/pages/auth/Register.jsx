@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { registerActions } from "../../redux/slice/registerSlice";
 import { toast } from "react-toastify";
+import {loginActions} from "../../redux/slice/loginSlice.js";
 
 /**
  * New User Registration page.
@@ -42,7 +43,7 @@ const schemaValidasiRegister = z
   })
   .refine((data) => data.password === data.confirmpassword, {
     message: "Password do not match",
-    path: ["confirmpassword"],
+    path: ["confirm_password"],
   });
 
 const Register = () => {
@@ -61,11 +62,28 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
+      setErrorMessage("");
       await dispatch(registerActions.registerUser(data)).unwrap();
-      toast.success("Registration successful!", { autoClose: 1500 });
-      navigate("/auth/create-pin", { state: { email: data.email } });
+      const loginResult = await dispatch(
+          loginActions.loginUser({
+            email: data.email,
+            password: data.password,
+          })
+      ).unwrap();
+
+      toast.success("Registration successful! Please set your PIN.", {
+        autoClose: 1500,
+      });
+
+      if (!loginResult.has_pin) {
+        navigate("/auth/create-pin");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
-      setErrorMessage(err || "Registration failed");
+      const message = typeof err === "string" ? err : err?.message || "Registration failed";
+      setErrorMessage(message);
+      toast.error(message, { autoClose: 3000 });
     }
   };
 

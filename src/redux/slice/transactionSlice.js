@@ -42,10 +42,10 @@ const topUp = createAsyncThunk(
 
 const getUserDashboard = createAsyncThunk(
     "transaction/getUserDashboard",
-    async (_, { rejectWithValue }) => {
+    async (payload = {}, { rejectWithValue }) => {
         try {
-            const data = await userService.getDashboard();
-            return data;
+            const period = payload?.period || "week";
+            return await userService.getTransactionReport(period);
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to get dashboard.");
         }
@@ -114,10 +114,11 @@ const transactionSlice = createSlice({
             })
             .addCase(getTransactionReport.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.chartData = Array.isArray(action.payload?.data)
-                    ? action.payload.data
-                    : Array.isArray(action.payload)
-                        ? action.payload
+                const payload = action.payload;
+                state.chartData = Array.isArray(payload?.data)
+                    ? payload.data
+                    : Array.isArray(payload)
+                        ? payload
                         : [];
             })
             .addCase(getTransactionHistory.fulfilled, (state, action) => {

@@ -42,10 +42,9 @@ const topUp = createAsyncThunk(
 
 const getUserDashboard = createAsyncThunk(
     "transaction/getUserDashboard",
-    async (payload = {}, { rejectWithValue }) => {
+    async (_ = {}, { rejectWithValue }) => {
         try {
-            const period = payload?.period || "week";
-            return await userService.getTransactionReport(period);
+            return await userService.getDashboard();
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to get dashboard.");
         }

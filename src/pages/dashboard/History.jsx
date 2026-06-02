@@ -25,25 +25,15 @@ const History = () => {
 
   const userTransactions = useMemo(() => {
     if (!Array.isArray(transactions)) return [];
-    return transactions.filter(
-        (tx) => tx.sender_id === loginUser?.id || tx.receiver_id === loginUser?.id,
-    );
+    return transactions
   }, [transactions, loginUser?.id]);
 
   const displayData = useMemo(() => {
     const formatted = userTransactions.map((tx) => {
-      const isSender = tx.sender_id === loginUser?.id;
-
-      const displayName = isSender
-          ? tx.receiver_name || "Recipient"
-          : tx.sender_name || "Sender";
-
-      const displayAvatar = isSender
-          ? tx.receiver_avatar
-          : tx.sender_avatar;
-
-      const amountSign = isSender ? "-" : "+";
-      const amountClass = isSender ? "text-danger" : "text-success";
+      const displayName = tx.receiver_name
+      const displayAvatar = tx.profile_picture_url
+      const amountSign = tx.type === "expense" ? "-" : "+";
+      const amountClass = tx.type ==="expense" ? "text-danger" : "text-success";
 
       return {
         ...tx,
@@ -51,10 +41,9 @@ const History = () => {
         displayAvatar,
         amountSign,
         amountClass,
-        searchString: `${displayName} ${tx.notes || ""}`.toLowerCase(),
+        searchString: `${displayName} ${tx.phone || ""}`.toLowerCase(),
       };
     });
-
     return formatted.filter((item) =>
         item.searchString.includes(searchQuery.toLowerCase()),
     );
@@ -110,7 +99,7 @@ const History = () => {
             {paginatedData.length > 0 ? (
                 paginatedData.map((item, index) => (
                 <TableContent
-                  key={item.id}
+                  key={index}
                   className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
                 >
                   <td className="px-2 py-4 md:px-6">

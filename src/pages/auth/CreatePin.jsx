@@ -4,20 +4,19 @@ import { AuthLayout } from "../../components/templates/AuthLayout";
 import PinInput from "../../components/atoms/PinInput";
 import Button from "../../components/atoms/Button";
 import imgBill from "../../assets/images/wallet.png";
-import { useDispatch, useSelector } from "react-redux";
-import { registerActions } from "../../redux/slice/registerSlice";
+import { useDispatch } from "react-redux";
 import { loginActions } from "../../redux/slice/loginSlice";
 import { toast } from "react-toastify";
+import {userService} from "../../services/userService.js";
 
 const CreatePin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loginUser } = useSelector((state) => state.loginReducer);
-  const stateRegister = useSelector((state) => state.registerReducer);
-  const [step, setStep] = useState(1);
-  const [firstPin, setFirstPin] = useState("");
+  const [step,       setStep]       = useState(1);
+  const [firstPin,   setFirstPin]   = useState("");
   const [confirmPin, setConfirmPin] = useState("");
-  const [error, setError] = useState("");
+  const [error,      setError]      = useState("");
+  const [isLoading,  setIsLoading]  = useState(false);
 
   const handleNextStep = async () => {
     if (step === 1) {
@@ -27,38 +26,40 @@ const CreatePin = () => {
       }
       setError("");
       setStep(2);
-    } else {
-      if (confirmPin.length < 6) {
-        setError("PIN must be 6 digits");
-        return;
-      }
-      if (firstPin !== confirmPin) {
-        setError("The PIN does not match. Please try again");
-        return;
-      }
+      return;
+    }
 
-      try {
-        setError("");
-        await dispatch(
-            registerActions.changePinUser({
-              current_pin: "",
-              new_pin: confirmPin,
-              confirm_new_pin: confirmPin,
-            })
-        ).unwrap();
+    if (confirmPin.length < 6) {
+      setError("PIN must be 6 digits");
+      return;
+    }
+    if (firstPin !== confirmPin) {
+      setError("PINs do not match. Please try again.");
+      return;
+    }
 
-        toast.success("PIN successfully created!", { autoClose: 1500 });
+    setError("");
+    setIsLoading(true);
 
-        if (loginUser) {
-          dispatch(loginActions.updateUserPin());
-          navigate("/dashboard");
-        } else {
-          navigate("/auth/login");
-        }
-      } catch (err) {
-        setError(err || "Failed to create PIN");
-        toast.error(err || "Failed to save PIN");
-      }
+    try {
+      await userService.createPin({
+        new_pin:         confirmPin,
+        confirm_new_pin: confirmPin,
+      });
+
+      dispatch(loginActions.updateUserPin());
+
+      toast.success("PIN created successfully!", { autoClose: 1500 });
+
+      navigate("/dashboard");
+    } catch (err) {
+      const message =
+          err?.response?.data?.message ||
+          (typeof err === "string" ? err : "Failed to create PIN");
+      setError(message);
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,9 +85,9 @@ const CreatePin = () => {
               variant="rectangelBlue"
               isFullWidth={true}
               onClick={handleNextStep}
-              isLoading={stateRegister.isLoading}
+              isLoading={isLoading}
           >
-            {stateRegister.isLoading
+            {isLoading
                 ? "Saving PIN..."
                 : step === 1
                     ? "Next Step"

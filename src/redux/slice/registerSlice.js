@@ -42,22 +42,6 @@ const forgotPasswordUser = createAsyncThunk(
     },
 );
 
-const createPinUser = createAsyncThunk(
-    "authRegister/createPinUser",
-    async (payload, { rejectWithValue }) => {
-      try {
-        const data = await userService.changePin({
-          current_pin: "",
-          new_pin: payload.pin,
-          confirm_new_pin: payload.pin
-        });
-        return data;
-      } catch (error) {
-        return rejectWithValue(error.response?.data?.message || "Failed to create PIN");
-      }
-    },
-);
-
 const updateProfileUser = createAsyncThunk(
     "authRegister/updateProfileUser",
     async (payload, { rejectWithValue }) => {

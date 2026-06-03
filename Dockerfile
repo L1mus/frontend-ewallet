@@ -4,7 +4,7 @@ COPY package*.json ./
 
 ARG VITE_ENVIRONMENT=production
 ENV VITE_ENVIRONMENT=$VITE_ENVIRONMENT
-ARG VITE_API_URL=http://localhost:8080/api
+ARG VITE_API_URL=http://localhost:80/api
 ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm ci

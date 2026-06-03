@@ -16,4 +16,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           image_name: ${{ github.repository }}
           image_tag: latest
-          extra_args: --build-arg VITE_ENVIRONMENT=production --build-arg VITE_API_URL=/api  --target builder

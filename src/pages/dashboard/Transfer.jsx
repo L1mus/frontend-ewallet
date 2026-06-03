@@ -15,12 +15,12 @@ const Transfer = () => {
   const navigate = useNavigate();
 
   const { loginUser } = useSelector((state) => state.loginReducer);
-  const { registerUser } = useSelector((state) => state.registerReducer);
+  const { getDataReceiver } = useSelector((state) => state.transactionReducer());
 
   const allUsers = useMemo(() => {
-    if (!Array.isArray(registerUser)) return [];
-    return registerUser
-  }, [registerUser]);
+    if (!Array.isArray(getDataReceiver)) return [];
+    return getDataReceiver
+  }, [getDataReceiver]);
 
   const filteredPeople = useMemo(() => {
     return allUsers.filter((user) => {

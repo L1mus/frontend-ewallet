@@ -6,6 +6,7 @@ const initialState = {
     transactions: [],
     dashboardSummary: null,
     chartData: [],
+    transferReceiver: [],
     currentTransaction: null,
     isLoading: false,
     error: null,
@@ -25,6 +26,22 @@ const transfer = createAsyncThunk(
         }
     }
 );
+
+
+const getDataReceiver = createAsyncThunk(
+    "transaction/dataReceiver",
+    async (payload, { rejectWithValue }) => {
+        try {
+            const data = await userService.findReceiver();
+            return data;
+        }catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "Get data failed."
+            );
+        }
+
+    }
+)
 
 const topUp = createAsyncThunk(
     "transaction/topUp",
@@ -107,6 +124,10 @@ const transactionSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(getDataReceiver.fulfilled, (state,action) =>{
+                state.isLoading = false;
+                state.transactions = action.payload;
+            })
             .addCase(getUserDashboard.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.dashboardSummary = action.payload;
@@ -165,6 +186,7 @@ const transactionSlice = createSlice({
 
 export const transactionActions = {
     ...transactionSlice.actions,
+    getDataReceiver,
     transfer,
     topUp,
     getUserDashboard,

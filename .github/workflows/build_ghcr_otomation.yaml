@@ -10,8 +10,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-      - name: Checking Dockerfile
-        run: cat ./Dockerfile
+      - name: Checking services
+        run: cat ./src/services/api.js
       - name: Build And Publish ${{github.repository}}
         uses: macbre/push-to-ghcr@master
         with:

@@ -18,13 +18,8 @@ const Transfer = () => {
   const { registerUser } = useSelector((state) => state.registerReducer);
 
   const allUsers = useMemo(() => {
-    const userMap = new Map();
-    if (Array.isArray(registerUser)) {
-      registerUser.forEach((u) => {
-        if (u.email) userMap.set(u.email, u);
-      });
-    }
-    return Array.from(userMap.values());
+    if (!Array.isArray(registerUser)) return [];
+    return registerUser
   }, [registerUser]);
 
   const filteredPeople = useMemo(() => {

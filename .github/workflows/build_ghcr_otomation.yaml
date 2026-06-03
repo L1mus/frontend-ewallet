@@ -1,6 +1,4 @@
 name: Build And Publish to GHCR
-with:
-    password: ${{ secrets.DOCKER_IO_TOKEN }}
 on:
   push:
     branches: main

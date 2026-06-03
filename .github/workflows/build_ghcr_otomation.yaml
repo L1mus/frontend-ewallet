@@ -14,5 +14,5 @@ jobs:
         uses: macbre/push-to-ghcr@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          image_name: ${{ github.repository }}/frontend-ewallet
+          image_name: ${{ github.repository }}
           image_tag: latest

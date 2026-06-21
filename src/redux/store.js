@@ -12,8 +12,7 @@ import {
 import storage from "redux-persist/es/storage";
 import env from "../utils/environment";
 
-import loginReducer from "./slice/loginSlice";
-import registerReducer from "./slice/registerSlice";
+import authReducer from "./slice/authSlice.js";
 import transactionReducer from "./slice/transactionSlice";
 
 const persistConfig = {
@@ -30,8 +29,7 @@ const persistConfig = {
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, {
-  loginReducer,
-  registerReducer,
+  authReducer,
   transactionReducer,
 });
 

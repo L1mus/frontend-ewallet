@@ -19,7 +19,7 @@ const TransferDetail = () => {
 
   const receiver = location.state?.receiver;
 
-  const { loginUser: sender } = useSelector((state) => state.loginReducer);
+  const { loginUser: sender } = useSelector((state) => state.authReducer);
   const { isLoading } = useSelector((state) => state.transactionReducer);
 
   const [amount, setAmount] = useState("");

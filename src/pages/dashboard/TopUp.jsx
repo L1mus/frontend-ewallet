@@ -13,7 +13,7 @@ import { transactionActions } from "../../redux/slice/transactionSlice";
 const TopUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loginUser: user } = useSelector((state) => state.loginReducer);
+  const { loginUser: user } = useSelector((state) => state.authReducer);
   const { isLoading } = useSelector((state) => state.transactionReducer);
   const [nominal, setNominal] = useState("");
   const [selectedMethod, setSelectedMethod] = useState(1);

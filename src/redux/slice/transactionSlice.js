@@ -6,6 +6,7 @@ const initialState = {
     transactions: [],
     dashboardSummary: null,
     chartData: [],
+    transferReceiver: [],
     currentTransaction: null,
     isLoading: false,
     error: null,
@@ -16,11 +17,24 @@ const transfer = createAsyncThunk(
     "transaction/transfer",
     async (payload, { rejectWithValue }) => {
         try {
-            const data = await transactionService.transfer(payload);
-            return data;
+            return await transactionService.transfer(payload);
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message || "Transfer transaction failed to process."
+            );
+        }
+    }
+);
+
+const getDataReceiver = createAsyncThunk(
+    "transaction/dataReceiver",
+    async (params, { rejectWithValue }) => {
+        try {
+            const result = await userService.findReceiver(params);
+            return result.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "Get data failed."
             );
         }
     }
@@ -30,22 +44,18 @@ const topUp = createAsyncThunk(
     "transaction/topUp",
     async (payload, { rejectWithValue }) => {
         try {
-            const data = await transactionService.topup(payload);
-            return data;
+            return await transactionService.topup(payload);
         } catch (error) {
-            return rejectWithValue(
-                error.response?.data?.message || "Top-up failed."
-            );
+            return rejectWithValue(error.response?.data?.message || "Top-up failed.");
         }
     }
 );
 
 const getUserDashboard = createAsyncThunk(
     "transaction/getUserDashboard",
-    async (payload = {}, { rejectWithValue }) => {
+    async (payload, { rejectWithValue }) => {
         try {
-            const period = payload?.period || "week";
-            return await userService.getTransactionReport(period);
+            return await userService.getDashboard();
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to get dashboard.");
         }
@@ -57,8 +67,7 @@ const getTransactionReport = createAsyncThunk(
     async (payload = {}, { rejectWithValue }) => {
         try {
             const period = payload?.period || "week";
-            const data = await userService.getTransactionReport(period);
-            return data;
+            return await userService.getTransactionReport(period);
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to get report.");
         }
@@ -83,7 +92,7 @@ const deleteTransactionHistory = createAsyncThunk(
         try {
             return id;
         } catch (err) {
-            console.error(err)
+            console.error(err);
             return rejectWithValue("Failed to delete transaction.");
         }
     }
@@ -108,6 +117,10 @@ const transactionSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(getDataReceiver.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.transferReceiver = Array.isArray(action.payload) ? action.payload : [];
+            })
             .addCase(getUserDashboard.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.dashboardSummary = action.payload;
@@ -141,7 +154,7 @@ const transactionSlice = createSlice({
                 state.currentTransaction = action.payload;
                 state.successMsg = "Top-up successful!";
             })
-            .addCase("authLogin/logoutUser/fulfilled", () => initialState)
+            .addCase("auth/logoutUser/fulfilled", () => initialState)
             .addMatcher(
                 (action) =>
                     action.type.startsWith("transaction/") &&
@@ -166,6 +179,7 @@ const transactionSlice = createSlice({
 
 export const transactionActions = {
     ...transactionSlice.actions,
+    getDataReceiver,
     transfer,
     topUp,
     getUserDashboard,

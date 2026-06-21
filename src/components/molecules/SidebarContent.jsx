@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import { loginActions } from "../../redux/slice/loginSlice";
 import SidebarNavItem from "./SidebarNavItem";
 import LayoutDashboard from "../../assets/icons/dashboard-two.svg?react";
 import ArrowLeftRight from "../../assets/icons/Send.svg?react";
@@ -8,6 +7,7 @@ import History from "../../assets/icons/history.svg?react";
 import CreditCard from "../../assets/icons/Upload.svg?react";
 import UserRound from "../../assets/icons/2 User.svg?react";
 import LogOut from "../../assets/icons/Log Out.svg?react";
+import {authActions} from "../../redux/slice/authSlice.js";
 
 const menuItems = [
   { path: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
@@ -20,10 +20,9 @@ const menuItems = [
 const SidebarContent = ({ onClose }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const action = loginActions;
 
   const handleLogout = () => {
-    dispatch(action.logoutUser());
+    dispatch(authActions.logoutUser());
     onClose();
     navigate("/login");
   };

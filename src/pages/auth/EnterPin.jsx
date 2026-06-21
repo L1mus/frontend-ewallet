@@ -13,15 +13,15 @@ const EnterPin = () => {
   const dispatch = useDispatch();
   const [pinValue, setPinValue] = useState("");
   const [error, setError] = useState("");
-  const stateLogin = useSelector((state) => state.loginReducer);
+  const stateAuth = useSelector((state) => state.authReducer);
   const stateTransaction = useSelector((state) => state.transactionReducer);
   const pendingTransaction = location.state || null;
 
   useEffect(() => {
-    if (!stateLogin.isLogin) {
+    if (!stateAuth.isLogin) {
       navigate("/auth/login", { replace: true });
     }
-  }, [navigate, stateLogin.isLogin]);
+  }, [navigate, stateAuth.isLogin]);
 
   const handleVerify = async () => {
     if (pinValue.length < 6) {
@@ -32,16 +32,15 @@ const EnterPin = () => {
     if (pendingTransaction && pendingTransaction.type === "TRANSFER") {
       try {
         const payloadTransfer = {
-          receiver_id:  parseInt(pendingTransaction.receiver_id),
-          amount:       parseFloat(pendingTransaction.amount),
-          description:  pendingTransaction.description || "",
-          pin:          pinValue,
+          receiver_id: parseInt(pendingTransaction.receiver_id),
+          amount: parseFloat(pendingTransaction.amount),
+          description: pendingTransaction.notes || "",
+          pin: pinValue,
         };
         await dispatch(transactionActions.transfer(payloadTransfer)).unwrap();
         toast.success("Transfer successful!", { autoClose: 1500 });
         navigate("/dashboard");
       } catch (err) {
-        // Error dikembalikan oleh backend jika PIN salah atau saldo tidak cukup
         setError(err || "Transaction failed. Please check your PIN.");
         toast.error(err || "Transfer failed");
       }
@@ -56,7 +55,7 @@ const EnterPin = () => {
     }
   };
 
-  if (!stateLogin.isLogin) return null;
+  if (!stateAuth.isLogin) return null;
 
   return (
       <div className="relative min-h-screen w-full bg-primary font-sans overflow-hidden flex items-center justify-center px-4 sm:px-8 py-10">
@@ -70,14 +69,8 @@ const EnterPin = () => {
 
         <div className="relative z-10 w-full max-w-125 bg-white rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] px-8 py-12 sm:px-12 flex flex-col items-center">
           <div className="w-full flex justify-start items-center gap-2 mb-8">
-            <img
-                src={iconMoneyWallet}
-                alt="Logo"
-                className="w-8 h-8 object-contain"
-            />
-            <h1 className="text-primary font-medium text-xl tracking-wide">
-              E-Wallet
-            </h1>
+            <img src={iconMoneyWallet} alt="Logo" className="w-8 h-8 object-contain" />
+            <h1 className="text-primary font-medium text-xl tracking-wide">E-Wallet</h1>
           </div>
 
           <div className="mb-10 mt-8 md:mt-0 text-center">

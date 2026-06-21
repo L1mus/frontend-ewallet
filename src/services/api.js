@@ -12,8 +12,8 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const state = JSON.parse(localStorage.getItem("persist:ew-DB") || "{}");
-        const loginState = state.loginReducer ? JSON.parse(state.loginReducer) : null;
-        const token = loginState?.token;
+        const authState = state.authReducer ? JSON.parse(state.authReducer) : null;
+        const token = authState?.token;
         console.log(token);
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;

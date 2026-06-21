@@ -8,7 +8,7 @@ import cn from "../../utils/cn";
 import { useSelector } from "react-redux";
 
 const Header = ({ isDashboard = false, onOpenSidebar }) => {
-  const stateLogin = useSelector((state) => state.loginReducer);
+  const stateAuth = useSelector((state) => state.authReducer);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
@@ -16,7 +16,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
   const toggleProfileDropdown = () =>
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
 
-  const currentUser = stateLogin.loginUser || {
+  const currentUser = stateAuth().loginUser || {
     name: "User",
     profilePicture: "/defaultAvatar.jpg",
   };
@@ -87,7 +87,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
       </div>
 
       <div className="flex items-center">
-        {isDashboard || stateLogin.isLogin ? (
+        {isDashboard || stateAuth().isLogin ? (
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-4 relative">
               <span

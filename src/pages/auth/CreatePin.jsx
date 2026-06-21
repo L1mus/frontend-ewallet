@@ -5,9 +5,9 @@ import PinInput from "../../components/atoms/PinInput";
 import Button from "../../components/atoms/Button";
 import imgBill from "../../assets/images/wallet.png";
 import { useDispatch } from "react-redux";
-import { loginActions } from "../../redux/slice/loginSlice";
 import { toast } from "react-toastify";
 import {userService} from "../../services/userService.js";
+import {authActions} from "../../redux/slice/authSlice.js";
 
 const CreatePin = () => {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const CreatePin = () => {
         confirm_new_pin: confirmPin,
       });
 
-      dispatch(loginActions.updateUserPin());
+      dispatch(authActions.updateUserPin());
 
       toast.success("PIN created successfully!", { autoClose: 1500 });
 

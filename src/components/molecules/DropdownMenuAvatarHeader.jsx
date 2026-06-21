@@ -3,11 +3,10 @@ import Button from "../atoms/Button";
 import iconPerson from "../../assets/icons/person.svg?react";
 import iconLogout from "../../assets/icons/Log Out.svg?react";
 import { useDispatch } from "react-redux";
-import { loginActions } from "../../redux/slice/loginSlice";
+import {authActions} from "../../redux/slice/authSlice.js";
 
 const DropdownMenuAvatarHeader = () => {
   const dispatch = useDispatch();
-  const actionLogin = loginActions;
   return (
     <>
       <div className="border-2 shadow-lg shadow-black-light border-black w-62 p-3 rounded-xl">
@@ -29,7 +28,7 @@ const DropdownMenuAvatarHeader = () => {
             children="Logout"
             isFullWidth={true}
             onClick={() => {
-              dispatch(actionLogin.logoutUser());
+                dispatch(authActions.logoutUser());
             }}
           />
         </div>

@@ -9,7 +9,7 @@ import iconMoneyWallet from "../../assets/icons/Money-Wallet.svg";
 import iconMail from "../../assets/icons/mail.svg";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { registerActions } from "../../redux/slice/registerSlice";
+import { authActions } from "../../redux/slice/authSlice";
 
 const schemaEmailForForgotPassword = z.object({
   email: z
@@ -20,9 +20,9 @@ const schemaEmailForForgotPassword = z.object({
 });
 
 const ForgotPassword = () => {
-  const stateRegister = useSelector((state) => state.registerReducer);
+  const stateAuth = useSelector((state) => state.authReducer);
+  const action = authActions;
   const dispatch = useDispatch();
-  const action = registerActions;
   const [isSent, setIsSent] = useState(false);
 
   const {
@@ -76,7 +76,7 @@ const ForgotPassword = () => {
             icon={iconMail}
             {...register("email")}
             error={errors.email?.message}
-            disabled={stateRegister?.isLoading}
+            disabled={stateAuth?.isLoading}
           />
           {errors.email && (
             <p className="text-danger">{errors.email.message}</p>
@@ -86,7 +86,7 @@ const ForgotPassword = () => {
             type="submit"
             isFullWidth={true}
             className="mt-2"
-            isLoading={stateRegister?.isLoading}
+            isLoading={stateAuth?.isLoading}
           >
             {isSent ? "Resend Link" : "Submit"}
           </Button>

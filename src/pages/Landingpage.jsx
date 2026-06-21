@@ -34,7 +34,7 @@ import { useSelector } from "react-redux";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const { loginUser, isLogin } = useSelector((state) => state.loginReducer);
+  const { loginUser, isLogin } = useSelector((state) => state.authReducer);
   const reviews = [
     {
       id: 1,

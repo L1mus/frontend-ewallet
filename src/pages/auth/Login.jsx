@@ -11,7 +11,7 @@ import iconFacebook from "../../assets/icons/bx_bxl-facebook-circle.svg";
 import iconGoogle from "../../assets/icons/flat-color-icons_google.svg";
 import imgLogin from "../../assets/images/wallet.png";
 import { useDispatch, useSelector } from "react-redux";
-import { loginActions } from "../../redux/slice/loginSlice";
+import { authActions } from "../../redux/slice/authSlice";
 import { toast } from "react-toastify";
 
 /**
@@ -24,7 +24,7 @@ import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const stateLogin = useSelector((state) => state.loginReducer);
+  const stateAuth = useSelector((state) => state.authReducer);
   const [authError, setAuthError] = useState("");
   const {
     register,
@@ -35,7 +35,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       setAuthError("");
-      const user = await dispatch(loginActions.loginUser(data)).unwrap();
+      const user = await dispatch(authActions.loginUser(data)).unwrap();
       toast.success("Login Success", { autoClose: 1000 });
       if (!user.has_pin) {
         navigate("/auth/create-pin");
@@ -77,7 +77,7 @@ const Login = () => {
             icon={iconMail}
             {...register("email", { required: "Email is required" })}
             error={errors.email?.message}
-            disabled={stateLogin.isLoading}
+            disabled={stateAuth.isLoading}
           />
 
           <div className="flex flex-col gap-2">
@@ -88,7 +88,7 @@ const Login = () => {
               icon={iconPassword}
               {...register("password", { required: "Password is required" })}
               error={errors.password?.message}
-              disabled={stateLogin.isLoading}
+              disabled={stateAuth.isLoading}
             />
             <div className="flex justify-end">
               <Link
@@ -109,9 +109,9 @@ const Login = () => {
           <Button
             type="submit"
             isFullWidth={true}
-            isLoading={stateLogin.isLoading}
+            isLoading={stateAuth.isLoading}
           >
-            {stateLogin.isLoading ? "Authenticating..." : "Login"}
+            {stateAuth.isLoading ? "Authenticating..." : "Login"}
           </Button>
         </form>
 

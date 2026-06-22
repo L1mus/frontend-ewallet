@@ -60,10 +60,10 @@ const TopUp = () => {
 
     try {
       await dispatch(transactionActions.topUp(payload)).unwrap();
-      toast.success("Permintaan Top-Up Berhasil!");
+      toast.success("Request Top-Up Successfully!");
       navigate("/dashboard");
     } catch (error) {
-      toast.error(error || "Gagal melakukan top up");
+      toast.error(error || "top up failed");
     }
   };
 
@@ -82,15 +82,15 @@ const TopUp = () => {
             </h3>
             <div className="bg-grey-light rounded-xl p-4 flex items-center gap-4">
               <Avatar
-                imageSrc={user?.profile_picture_url}
+                imageSrc={loginUser?.profile_picture_url}
                 className="w-21 h-21 rounded-xl object-cover shadow-sm"
               />
               <div className="flex flex-col items-start gap-1">
                 <span className="font-bold text-black text-base">
-                  {user?.full_name}
+                  {loginUser?.full_name}
                 </span>
-                <span className="text-grey text-sm">{user?.phone || "-"}</span>
-                {user?.isVerified && (
+                <span className="text-grey text-sm">{loginUser?.phone || "-"}</span>
+                {loginUser?.isVerified && (
                   <span className="inline-flex items-center gap-1 bg-primary text-white text-xs font-bold px-2 py-1 rounded-md mt-1">
                     <BadgeCheck size={14} /> Verified
                   </span>

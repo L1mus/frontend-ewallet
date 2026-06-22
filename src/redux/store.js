@@ -18,7 +18,7 @@ import transactionReducer from "./slice/transactionSlice";
 const persistConfig = {
   key: "ew-DB",
   storage,
-  whitelist: ["loginReducer", "registerReducer", "transactionReducer"],
+  whitelist: ["authReducer"],
   blacklist: [
     "activeTooltip",
     "mousePosition",

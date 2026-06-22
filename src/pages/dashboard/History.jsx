@@ -21,7 +21,7 @@ const History = () => {
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const { transactions } = useSelector((state) => state.transactionReducer);
-  const { loginUser } = useSelector((state) => state.loginReducer);
+  const { loginUser } = useSelector((state) => state.authReducer);
 
   const userTransactions = useMemo(() => {
     if (!Array.isArray(transactions)) return [];

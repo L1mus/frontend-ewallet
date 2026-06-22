@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { toast } from "react-toastify";
 import { Banknote, BadgeCheck, Star } from "lucide-react";
 import Avatar from "../../components/atoms/Avatar";
@@ -12,10 +12,12 @@ import Input from "../../components/atoms/Input";
 import ArrowLeftRight from "../../assets/icons/Send.svg?react";
 import Bill from "../../assets/icons/u_money-bill.svg";
 import Button from "../../components/atoms/Button";
+import {transactionActions} from "../../redux/slice/transactionSlice.js";
 
 const TransferDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const receiver = location.state?.receiver;
 
@@ -28,7 +30,7 @@ const TransferDetail = () => {
 
   const [statusModal, setStatusModal] = useState({
     isOpen: false,
-    status: "success",
+    success: "success",
   });
 
   useEffect(() => {
@@ -51,23 +53,37 @@ const TransferDetail = () => {
     setIsPinModalOpen(true);
   };
 
-  const handleConfirmTransfer = () => {
+
+  const handleConfirmTransfer = async (pin) => {
     setIsPinModalOpen(false);
-    navigate("/auth/enter-pin", {
-      state: {
-        type: "TRANSFER",
-        receiver_id: receiver?.id,
-        amount: amount,
-        notes: notes,
-      },
-    });
+    const payload = {
+      receiverID: receiver?.id,
+      amount: parseFloat(amount),
+      notes: notes,
+      pin: pin,
+    }
+    try {
+      dispatch(transactionActions.transfer(payload)).unwrap();
+      navigate("/auth/enter-pin", {
+        state: {
+          type: "TRANSFER",
+          receiver_id: receiver?.id,
+          amount: parseFloat(amount),
+          notes: notes,
+        },
+      });
+    } catch (err) {
+      toast.error(err || "transfer failed");
+    }finally {
+      setIsPinModalOpen(false);
+    }
   };
 
   const handleCloseStatusModal = () => {
     setStatusModal((prev) => ({ ...prev, isOpen: false }));
-    if (statusModal.status === "success") {
-      navigate("/dashboard");
-    }
+    // if (statusModal.status === "success") {
+    //   navigate("/dashboard");
+    // }
   };
 
   return (
@@ -75,7 +91,6 @@ const TransferDetail = () => {
       <div className="mb-6">
         <div
           className="hidden md:flex items-center gap-2 mb-6 text-primary cursor-pointer w-fit"
-          onClick={() => navigate(-1)}
         >
           <ArrowLeftRight />
           <h1 className="text-xl font-bold text-black">Transfer Money</h1>

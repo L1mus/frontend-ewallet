@@ -16,7 +16,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
   const toggleProfileDropdown = () =>
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
 
-  const currentUser = stateAuth().loginUser || {
+  const currentUser = stateAuth.loginUser || {
     name: "User",
     profilePicture: "/defaultAvatar.jpg",
   };
@@ -87,7 +87,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
       </div>
 
       <div className="flex items-center">
-        {isDashboard || stateAuth().isLogin ? (
+        {isDashboard || stateAuth.isLogin ? (
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-4 relative">
               <span

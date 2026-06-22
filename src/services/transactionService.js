@@ -3,9 +3,9 @@ import api from "./api";
 export const transactionService = {
     transfer: async (payload) => {
         const res = await api.post("/transactions/transfer", {
-            receiver_id:  payload.receiver_id,
+            receiver_id:  payload.receiverID,
             amount:       payload.amount,
-            description:  payload.description || "",
+            description:  payload.notes || "",
             pin:          payload.pin,
         });
         return res.data.data;

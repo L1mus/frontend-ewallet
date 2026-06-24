@@ -16,7 +16,7 @@ export const userService = {
         const formData = new FormData();
         if (payload.full_name) formData.append("full_name", payload.full_name);
         if (payload.phone)     formData.append("phone", payload.phone);
-        if (payload.picture)   formData.append("profile_picture_url", payload.picture);
+        if (payload.picture)   formData.append("picture", payload.picture);
         const res = await api.patch("/users/profile", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });

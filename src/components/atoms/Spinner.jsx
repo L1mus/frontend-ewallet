@@ -13,7 +13,7 @@ const Spinner = ({ size = 24, className }) => {
   return (
     <Loader2
       size={size}
-      className={cn("animate-spin text-primary", className)}
+      className={cn("text-primary animate-spin", className)}
     />
   );
 };

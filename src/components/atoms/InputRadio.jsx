@@ -7,7 +7,7 @@ const InputRadio = ({
   onChange,
 }) => {
   return (
-    <label className="flex items-center gap-4 bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-colors p-4 rounded-xl cursor-pointer">
+    <label className="flex cursor-pointer items-center gap-4 rounded-xl border border-transparent bg-gray-50 p-4 transition-colors hover:border-gray-200 hover:bg-gray-100">
       <input
         name={nameInput}
         id={valueInput}
@@ -15,10 +15,10 @@ const InputRadio = ({
         value={valueInput}
         checked={checked}
         onChange={onChange}
-        className="w-4 h-4 border-grey focus:ring-primary cursor-pointer checked:bg-primary"
+        className="border-grey focus:ring-primary checked:bg-primary h-4 w-4 cursor-pointer"
       />
 
-      <div className="w-16 flex items-center justify-center">
+      <div className="flex w-16 items-center justify-center">
         <img
           src={logo}
           alt={`logo ${labelName}`}
@@ -26,7 +26,7 @@ const InputRadio = ({
         />
       </div>
 
-      <span className="text-gray-600 font-medium cursor-pointer">
+      <span className="cursor-pointer font-medium text-gray-600">
         {labelName}
       </span>
     </label>

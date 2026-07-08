@@ -20,9 +20,15 @@ const ChangePin = () => {
   const [error, setError] = useState("");
 
   const titles = {
-    1: { title: "Enter Current Pin 👋", desc: "Please enter your current 6-digit PIN." },
+    1: {
+      title: "Enter Current Pin 👋",
+      desc: "Please enter your current 6-digit PIN.",
+    },
     2: { title: "Create New Pin", desc: "Create a new 6-digit PIN." },
-    3: { title: "Confirm New Pin", desc: "Please type your new PIN again to confirm." },
+    3: {
+      title: "Confirm New Pin",
+      desc: "Please type your new PIN again to confirm.",
+    },
   };
 
   const handleNextStep = async () => {
@@ -41,17 +47,18 @@ const ChangePin = () => {
     }
 
     if (confirmPin.length < 6) return setError("PIN must be 6 digits");
-    if (newPin !== confirmPin) return setError("PINs do not match. Please try again.");
+    if (newPin !== confirmPin)
+      return setError("PINs do not match. Please try again.");
 
     setError("");
 
     try {
       const result = await dispatch(
-          authActions.changePinUser({
-            current_pin: currentPin,
-            new_pin: confirmPin,
-            confirm_new_pin: confirmPin,
-          }),
+        authActions.changePinUser({
+          current_pin: currentPin,
+          new_pin: confirmPin,
+          confirm_new_pin: confirmPin,
+        }),
       ).unwrap();
 
       dispatch(authActions.syncActiveSession(result));
@@ -65,60 +72,62 @@ const ChangePin = () => {
   };
 
   return (
-      <div className="w-full pb-10">
-        <div className="flex items-center gap-2 mb-6 text-primary px-4 md:px-0">
-          <User className={"text-2xl font-bold"} />
-          <h1 className="text-xl font-bold text-black font-lexend">Profile</h1>
+    <div className="w-full pb-10">
+      <div className="text-primary mb-6 flex items-center gap-2 px-4 md:px-0">
+        <User className={"text-2xl font-bold"} />
+        <h1 className="font-lexend text-xl font-bold text-black">Profile</h1>
+      </div>
+
+      <div className="flex w-full flex-col items-center bg-white p-6 md:rounded-xl md:border md:border-gray-200 md:p-12 md:shadow-sm">
+        <div className="mb-10 text-center">
+          <h2 className="font-lexend mb-2 text-xl font-bold text-black">
+            {titles[step].title}
+          </h2>
+          <p className="font-lexend text-sm text-gray-500">
+            {titles[step].desc}
+          </p>
         </div>
 
-        <div className="w-full bg-white md:border md:border-gray-200 md:rounded-xl md:shadow-sm p-6 md:p-12 flex flex-col items-center">
-          <div className="text-center mb-10">
-            <h2 className="font-bold text-black text-xl mb-2 font-lexend">
-              {titles[step].title}
-            </h2>
-            <p className="text-gray-500 text-sm font-lexend">{titles[step].desc}</p>
+        <div className="flex w-full max-w-lg flex-col gap-10">
+          <div className="flex justify-center">
+            <PinInput
+              key={step}
+              length={6}
+              error={error}
+              onChange={
+                step === 1
+                  ? setCurrentPin
+                  : step === 2
+                    ? setNewPin
+                    : setConfirmPin
+              }
+            />
           </div>
 
-          <div className="w-full max-w-lg flex flex-col gap-10">
-            <div className="flex justify-center">
-              <PinInput
-                  key={step}
-                  length={6}
-                  error={error}
-                  onChange={
-                    step === 1
-                        ? setCurrentPin
-                        : step === 2
-                            ? setNewPin
-                            : setConfirmPin
-                  }
-              />
-            </div>
+          <Button
+            onClick={handleNextStep}
+            isLoading={isLoading}
+            isFullWidth
+            className="font-bold"
+          >
+            {step < 3 ? "Next" : "Submit"}
+          </Button>
 
-            <Button
-                onClick={handleNextStep}
-                isLoading={isLoading}
-                isFullWidth
-                className="font-bold"
+          {step > 1 && (
+            <button
+              type="button"
+              onClick={() => {
+                setStep((s) => s - 1);
+                setError("");
+              }}
+              className="text-grey hover:text-primary cursor-pointer text-center text-sm font-medium transition-colors"
             >
-              {step < 3 ? "Next" : "Submit"}
-            </Button>
-
-            {step > 1 && (
-                <button
-                    type="button"
-                    onClick={() => {
-                      setStep((s) => s - 1);
-                      setError("");
-                    }}
-                    className="text-center text-sm font-medium text-grey hover:text-primary transition-colors cursor-pointer"
-                >
-                  Back
-                </button>
-            )}
-          </div>
+              Back
+            </button>
+          )}
         </div>
       </div>
+    </div>
   );
 };
 

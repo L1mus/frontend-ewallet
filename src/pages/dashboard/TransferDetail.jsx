@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router";
-import {useDispatch, useSelector} from "react-redux";
-import {toast} from "react-toastify";
-import {BadgeCheck, Banknote, Star} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { BadgeCheck, Banknote, Star } from "lucide-react";
 
 import Avatar from "../../components/atoms/Avatar";
 import Stepper from "../../components/molecules/Stepper";
@@ -12,198 +12,208 @@ import Input from "../../components/atoms/Input";
 import ArrowLeftRight from "../../assets/icons/Send.svg?react";
 import Bill from "../../assets/icons/u_money-bill.svg";
 import Button from "../../components/atoms/Button";
-import {transactionActions} from "../../redux/slice/transactionSlice.js";
+import { transactionActions } from "../../redux/slice/transactionSlice.js";
 
 const TransferDetail = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const receiver = location.state?.receiver;
+  const receiver = location.state?.receiver;
 
-    const {loginUser: sender} = useSelector((state) => state.authReducer);
-    const {isLoading} = useSelector((state) => state.transactionReducer);
+  const { loginUser: sender } = useSelector((state) => state.authReducer);
+  const { isLoading } = useSelector((state) => state.transactionReducer);
 
-    const [amount, setAmount] = useState("");
-    const [notes, setNotes] = useState("");
-    const [isPinModalOpen, setIsPinModalOpen] = useState(false);
-    const [statusModal, setStatusModal] = useState({
-        isOpen: false, status: "success",
-    });
+  const [amount, setAmount] = useState("");
+  const [notes, setNotes] = useState("");
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+  const [statusModal, setStatusModal] = useState({
+    isOpen: false,
+    status: "success",
+  });
 
-    useEffect(() => {
-        if (!receiver) {
-            toast.error("Please select a recipient first.");
-            navigate("/transfer");
-        }
-    }, [receiver, navigate]);
+  useEffect(() => {
+    if (!receiver) {
+      toast.error("Please select a recipient first.");
+      navigate("/transfer");
+    }
+  }, [receiver, navigate]);
 
-    const handleOpenPinModal = () => {
-        const amountNum = parseFloat(amount);
-        if (!amount || amountNum <= 0) {
-            toast.error("Please enter a valid amount.");
-            return;
-        }
-        if (sender && amountNum > sender.balance) {
-            toast.error("Insufficient balance.");
-            return;
-        }
-        setIsPinModalOpen(true);
+  const handleOpenPinModal = () => {
+    const amountNum = parseFloat(amount);
+    if (!amount || amountNum <= 0) {
+      toast.error("Please enter a valid amount.");
+      return;
+    }
+    if (sender && amountNum > sender.balance) {
+      toast.error("Insufficient balance.");
+      return;
+    }
+    setIsPinModalOpen(true);
+  };
+
+  const handleConfirmTransfer = async (pin) => {
+    setIsPinModalOpen(false);
+
+    const payload = {
+      receiverID: receiver?.id,
+      amount: parseFloat(amount),
+      notes: notes,
+      pin: pin,
     };
 
-    const handleConfirmTransfer = async (pin) => {
-        setIsPinModalOpen(false);
+    try {
+      await dispatch(transactionActions.transfer(payload)).unwrap();
+      setStatusModal({ isOpen: true, status: "success" });
+    } catch (err) {
+      setStatusModal({ isOpen: true, status: "failed" });
+      console.error("Transfer error:", err);
+    }
+  };
 
-        const payload = {
-            receiverID: receiver?.id, amount: parseFloat(amount), notes: notes, pin: pin,
-        };
+  const handleStatusPrimaryAction = () => {
+    if (statusModal.status === "success") {
+      navigate("/dashboard");
+    } else {
+      setStatusModal((prev) => ({ ...prev, isOpen: false }));
+    }
+  };
 
-        try {
-            await dispatch(transactionActions.transfer(payload)).unwrap();
-            setStatusModal({isOpen: true, status: "success"});
-        } catch (err) {
-            setStatusModal({isOpen: true, status: "failed"});
-            console.error("Transfer error:", err);
-        }
-    };
+  const handleStatusSecondaryAction = () => {
+    setStatusModal((prev) => ({ ...prev, isOpen: false }));
+    navigate("/history");
+  };
 
-    const handleStatusPrimaryAction = () => {
-        if (statusModal.status === "success") {
-            navigate("/dashboard");
-        } else {
-            setStatusModal((prev) => ({...prev, isOpen: false}));
-        }
-    };
+  const handleCloseStatusModal = () => {
+    setStatusModal((prev) => ({ ...prev, isOpen: false }));
+  };
 
-    const handleStatusSecondaryAction = () => {
-        setStatusModal((prev) => ({...prev, isOpen: false}));
-        navigate("/history");
-    };
+  return (
+    <div className="w-full pb-10">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="text-primary mb-6 hidden w-fit cursor-pointer items-center gap-2 md:flex">
+          <ArrowLeftRight />
+          <h1 className="text-xl font-bold text-black">Transfer Money</h1>
+        </div>
+        <Stepper
+          steps={["Find People", "Set Nominal", "Finish"]}
+          activeStep={1}
+        />
+      </div>
 
-    const handleCloseStatusModal = () => {
-        setStatusModal((prev) => ({...prev, isOpen: false}));
-    };
-
-    return (<div className="w-full pb-10">
-            {/* Header */}
-            <div className="mb-6">
-                <div className="hidden md:flex items-center gap-2 mb-6 text-primary cursor-pointer w-fit">
-                    <ArrowLeftRight/>
-                    <h1 className="text-xl font-bold text-black">Transfer Money</h1>
-                </div>
-                <Stepper
-                    steps={["Find People", "Set Nominal", "Finish"]}
-                    activeStep={1}
-                />
-            </div>
-
-            <div className="w-full bg-white md:border md:border-grey-light md:rounded-xl md:shadow-sm md:p-8">
-                {/* Receiver info */}
-                <div className="mb-8 px-4 md:px-0">
-                    <h3 className="font-bold text-black text-lg mb-4">
-                        People Information
-                    </h3>
-                    <div
-                        className="bg-gray-100 rounded-xl p-4 flex items-center justify-between border border-grey-light">
-                        <div className="flex items-center gap-4">
-                            <Avatar
-                                imageSrc={receiver?.profile_picture_url}
-                                className="w-16 h-16 md:w-21 md:h-21 rounded-xl object-cover shadow-sm"
-                            />
-                            <div className="flex flex-col items-start">
-                <span className="font-semibold text-black text-xs md:text-base">
+      <div className="md:border-grey-light w-full bg-white md:rounded-xl md:border md:p-8 md:shadow-sm">
+        {/* Receiver info */}
+        <div className="mb-8 px-4 md:px-0">
+          <h3 className="mb-4 text-lg font-bold text-black">
+            People Information
+          </h3>
+          <div className="border-grey-light flex items-center justify-between rounded-xl border bg-gray-100 p-4">
+            <div className="flex items-center gap-4">
+              <Avatar
+                imageSrc={receiver?.profile_picture_url}
+                className="h-16 w-16 rounded-xl object-cover shadow-sm md:h-21 md:w-21"
+              />
+              <div className="flex flex-col items-start">
+                <span className="text-xs font-semibold text-black md:text-base">
                   {receiver?.full_name}
                 </span>
-                                <span className="text-grey text-xs md:text-base">
+                <span className="text-grey text-xs md:text-base">
                   {receiver?.phone || "-"}
                 </span>
-                                {receiver?.isVerified && (<span
-                                        className="inline-flex items-center md:gap-1 bg-primary text-white text-sm font-normal px-2 py-1 rounded-md mt-1">
-                    <BadgeCheck size={16}/> Verified
-                  </span>)}
-                            </div>
-                        </div>
-                        <Star className="text-gray-400 w-6 h-6 mr-2"/>
-                    </div>
-                </div>
-
-                {/* Amount */}
-                <div className="mb-8 px-4 md:px-0">
-                    <h3 className="font-bold text-black text-lg mb-1">Amount</h3>
-                    <p className="text-gray-500 text-sm mb-4">
-                        Type the amount you want to transfer and then press continue to the
-                        next steps.
-                    </p>
-                    <div className="relative w-full">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Banknote className="text-grey w-5 h-5"/>
-                        </div>
-                        <Input
-                            type="number"
-                            placeholder="Enter Nominal Transfer"
-                            icon={Bill}
-                            className="placeholder:font-medium"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            min="0"
-                            onKeyDown={(e) => {
-                                if (["-", "+", "e", "E", ".", ","].includes(e.key)) {
-                                    e.preventDefault();
-                                }
-                            }}
-                        />
-                    </div>
-                </div>
-
-                {/* Notes */}
-                <div className="mb-10 px-4 md:px-0">
-                    <h3 className="font-bold text-black text-lg mb-1">Notes</h3>
-                    <p className="text-grey text-sm mb-4">
-                        You can add some notes for this transfer such as payment coffee or
-                        something
-                    </p>
-                    <textarea
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        placeholder="Enter Some Notes"
-                        className="w-full border border-grey-light rounded-xl p-4 outline-none text-grey font-medium focus:border-primary min-h-35 resize-y placeholder:font-medium"
-                    />
-                </div>
-
-                {/* CTA */}
-                <div className="px-4 md:px-0">
-                    <Button
-                        onClick={handleOpenPinModal}
-                        isLoading={isLoading}
-                        isFullWidth
-                        className="py-4 rounded-xl font-bold text-lg"
-                    >
-                        Continue to Transfer
-                    </Button>
-                </div>
+                {receiver?.isVerified && (
+                  <span className="bg-primary mt-1 inline-flex items-center rounded-md px-2 py-1 text-sm font-normal text-white md:gap-1">
+                    <BadgeCheck size={16} /> Verified
+                  </span>
+                )}
+              </div>
             </div>
+            <Star className="mr-2 h-6 w-6 text-gray-400" />
+          </div>
+        </div>
 
-            <ModalPin
-                isOpen={isPinModalOpen}
-                onClose={() => setIsPinModalOpen(false)}
-                onConfirm={handleConfirmTransfer}
-                transferToName={receiver?.full_name}
+        {/* Amount */}
+        <div className="mb-8 px-4 md:px-0">
+          <h3 className="mb-1 text-lg font-bold text-black">Amount</h3>
+          <p className="mb-4 text-sm text-gray-500">
+            Type the amount you want to transfer and then press continue to the
+            next steps.
+          </p>
+          <div className="relative w-full">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+              <Banknote className="text-grey h-5 w-5" />
+            </div>
+            <Input
+              type="number"
+              placeholder="Enter Nominal Transfer"
+              icon={Bill}
+              className="placeholder:font-medium"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              min="0"
+              onKeyDown={(e) => {
+                if (["-", "+", "e", "E", ".", ","].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
             />
+          </div>
+        </div>
 
-            <ModalStatus
-                isOpen={statusModal.isOpen}
-                onClose={handleCloseStatusModal}
-                status={statusModal.status}
-                transferToName={receiver?.full_name}
-                primaryAction={{
-                    label: statusModal.status === "success" ? "Back to Dashboard" : "Try Again",
-                    onClick: handleStatusPrimaryAction,
-                }}
-                secondaryAction={{
-                    label: "View History", onClick: handleStatusSecondaryAction,
-                }}
-            />
-        </div>);
+        {/* Notes */}
+        <div className="mb-10 px-4 md:px-0">
+          <h3 className="mb-1 text-lg font-bold text-black">Notes</h3>
+          <p className="text-grey mb-4 text-sm">
+            You can add some notes for this transfer such as payment coffee or
+            something
+          </p>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Enter Some Notes"
+            className="border-grey-light text-grey focus:border-primary min-h-35 w-full resize-y rounded-xl border p-4 font-medium outline-none placeholder:font-medium"
+          />
+        </div>
+
+        {/* CTA */}
+        <div className="px-4 md:px-0">
+          <Button
+            onClick={handleOpenPinModal}
+            isLoading={isLoading}
+            isFullWidth
+            className="rounded-xl py-4 text-lg font-bold"
+          >
+            Continue to Transfer
+          </Button>
+        </div>
+      </div>
+
+      <ModalPin
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
+        onConfirm={handleConfirmTransfer}
+        transferToName={receiver?.full_name}
+      />
+
+      <ModalStatus
+        isOpen={statusModal.isOpen}
+        onClose={handleCloseStatusModal}
+        status={statusModal.status}
+        transferToName={receiver?.full_name}
+        primaryAction={{
+          label:
+            statusModal.status === "success"
+              ? "Back to Dashboard"
+              : "Try Again",
+          onClick: handleStatusPrimaryAction,
+        }}
+        secondaryAction={{
+          label: "View History",
+          onClick: handleStatusSecondaryAction,
+        }}
+      />
+    </div>
+  );
 };
 
 export default TransferDetail;

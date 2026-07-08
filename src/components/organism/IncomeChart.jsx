@@ -52,135 +52,136 @@ const IncomeChart = ({ data }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const activeDataKey  = selectedType === "Income" ? "total_income" : "total_expense";
+  const activeDataKey =
+    selectedType === "Income" ? "total_income" : "total_expense";
   const activeBarColor = selectedType === "Income" ? "#2b4aff" : "#EF4444";
-  const chartData      = Array.isArray(data) ? data : [];
+  const chartData = Array.isArray(data) ? data : [];
 
   return (
-      <div
-          ref={chartRef}
-          className="w-full bg-white sm:border sm:border-grey-light rounded-xl p-4 sm:p-6 shadow-sm flex flex-col"
-      >
-        <div className="flex justify-between items-center mb-8">
-          <h3 className="font-bold text-black text-base sm:text-lg">
-            Income Analytics
-          </h3>
-          <div className="flex gap-2 sm:gap-4">
-            {/* Dropdown Period */}
-            <div className="relative">
-              <button
-                  onClick={() => {
-                    setIsPeriodOpen(!isPeriodOpen);
-                    setIsTypeOpen(false);
-                  }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 border border-grey-light rounded-xl text-xs sm:text-sm font-semibold text-grey hover:bg-gray-50 transition-colors cursor-pointer"
-              >
-                {selectedPeriod}
-                <ChevronDown className="w-4 h-4 text-grey" />
-              </button>
-              {isPeriodOpen && (
-                  <div className="absolute right-0 mt-2 w-32 sm:w-40 bg-white border border-grey-light rounded-xl shadow-lg py-1 z-50 overflow-hidden">
-                    {["Weekly", "Monthly", "Yearly"].map((opt) => (
-                        <div
-                            key={opt}
-                            onClick={() => {
-                              setSelectedPeriod(opt);
-                              setIsPeriodOpen(false);
-                            }}
-                            className="px-3 py-2 text-sm hover:bg-primary/10 cursor-pointer text-grey font-medium"
-                        >
-                          {opt}
-                        </div>
-                    ))}
+    <div
+      ref={chartRef}
+      className="sm:border-grey-light flex w-full flex-col rounded-xl bg-white p-4 shadow-sm sm:border sm:p-6"
+    >
+      <div className="mb-8 flex items-center justify-between">
+        <h3 className="text-base font-bold text-black sm:text-lg">
+          Income Analytics
+        </h3>
+        <div className="flex gap-2 sm:gap-4">
+          {/* Dropdown Period */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setIsPeriodOpen(!isPeriodOpen);
+                setIsTypeOpen(false);
+              }}
+              className="border-grey-light text-grey flex cursor-pointer items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-gray-50 sm:px-4 sm:py-2 sm:text-sm"
+            >
+              {selectedPeriod}
+              <ChevronDown className="text-grey h-4 w-4" />
+            </button>
+            {isPeriodOpen && (
+              <div className="border-grey-light absolute right-0 z-50 mt-2 w-32 overflow-hidden rounded-xl border bg-white py-1 shadow-lg sm:w-40">
+                {["Weekly", "Monthly", "Yearly"].map((opt) => (
+                  <div
+                    key={opt}
+                    onClick={() => {
+                      setSelectedPeriod(opt);
+                      setIsPeriodOpen(false);
+                    }}
+                    className="hover:bg-primary/10 text-grey cursor-pointer px-3 py-2 text-sm font-medium"
+                  >
+                    {opt}
                   </div>
-              )}
-            </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-            {/* Dropdown Type */}
-            <div className="relative">
-              <button
-                  onClick={() => {
-                    setIsTypeOpen(!isTypeOpen);
-                    setIsPeriodOpen(false);
-                  }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 border border-grey-light rounded-xl text-xs sm:text-sm font-semibold text-grey hover:bg-gray-50 transition-colors cursor-pointer"
-              >
-                {selectedType}
-                <ChevronDown className="w-4 h-4 text-grey" />
-              </button>
-              {isTypeOpen && (
-                  <div className="absolute right-0 mt-2 w-32 sm:w-40 bg-white border border-grey-light rounded-xl shadow-lg py-1 z-50 overflow-hidden">
-                    {["Income", "Expense"].map((opt) => (
-                        <div
-                            key={opt}
-                            onClick={() => {
-                              setSelectedType(opt);
-                              setIsTypeOpen(false);
-                            }}
-                            className="px-3 py-2 text-sm hover:bg-primary/10 cursor-pointer text-grey font-medium"
-                        >
-                          {opt}
-                        </div>
-                    ))}
+          {/* Dropdown Type */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setIsTypeOpen(!isTypeOpen);
+                setIsPeriodOpen(false);
+              }}
+              className="border-grey-light text-grey flex cursor-pointer items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-gray-50 sm:px-4 sm:py-2 sm:text-sm"
+            >
+              {selectedType}
+              <ChevronDown className="text-grey h-4 w-4" />
+            </button>
+            {isTypeOpen && (
+              <div className="border-grey-light absolute right-0 z-50 mt-2 w-32 overflow-hidden rounded-xl border bg-white py-1 shadow-lg sm:w-40">
+                {["Income", "Expense"].map((opt) => (
+                  <div
+                    key={opt}
+                    onClick={() => {
+                      setSelectedType(opt);
+                      setIsTypeOpen(false);
+                    }}
+                    className="hover:bg-primary/10 text-grey cursor-pointer px-3 py-2 text-sm font-medium"
+                  >
+                    {opt}
                   </div>
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-
-        <div style={{ width: "100%", height: 350 }}>
-          {chartData.length === 0 ? (
-              <div className="w-full h-full flex items-center justify-center text-grey text-sm italic">
-                No data available for this period.
-              </div>
-          ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                    data={chartData}
-                    barSize={40}
-                    margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
-                >
-                  <CartesianGrid
-                      strokeDasharray="3 3"
-                      vertical={false}
-                      stroke="#E8E8E8"
-                  />
-                  <XAxis
-                      dataKey="period"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fontSize: 12, fill: "#808080" }}
-                      dy={15}
-                  />
-                  <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fontSize: 12, fill: "#808080" }}
-                      tickFormatter={(val) => (val >= 1000 ? `${val / 1000}k` : val)}
-                  />
-                  <Tooltip
-                      cursor={{ fill: "rgba(59, 130, 246, 0.05)", radius: 12 }}
-                      contentStyle={{
-                        backgroundColor: "#fff",
-                        border: "1px solid #E8E8E8",
-                        borderRadius: "12px",
-                        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)",
-                      }}
-                      formatter={(value) => [
-                        `Rp. ${new Intl.NumberFormat("id-ID").format(value)}`,
-                        selectedType,
-                      ]}
-                  />
-                  <Bar
-                      dataKey={activeDataKey}
-                      fill={activeBarColor}
-                      radius={[12, 12, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-          )}
-        </div>
       </div>
+
+      <div style={{ width: "100%", height: 350 }}>
+        {chartData.length === 0 ? (
+          <div className="text-grey flex h-full w-full items-center justify-center text-sm italic">
+            No data available for this period.
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              barSize={40}
+              margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#E8E8E8"
+              />
+              <XAxis
+                dataKey="period"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12, fill: "#808080" }}
+                dy={15}
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12, fill: "#808080" }}
+                tickFormatter={(val) => (val >= 1000 ? `${val / 1000}k` : val)}
+              />
+              <Tooltip
+                cursor={{ fill: "rgba(59, 130, 246, 0.05)", radius: 12 }}
+                contentStyle={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E8E8E8",
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)",
+                }}
+                formatter={(value) => [
+                  `Rp. ${new Intl.NumberFormat("id-ID").format(value)}`,
+                  selectedType,
+                ]}
+              />
+              <Bar
+                dataKey={activeDataKey}
+                fill={activeBarColor}
+                radius={[12, 12, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
+      </div>
+    </div>
   );
 };
 

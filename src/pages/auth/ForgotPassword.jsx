@@ -37,30 +37,33 @@ const ForgotPassword = () => {
       setIsSent(true);
       toast.success(`Email link reset password sent successfully!`);
     } catch (err) {
-      toast.error(err || "Failed to request password reset. Email might not be registered.");
+      toast.error(
+        err ||
+          "Failed to request password reset. Email might not be registered.",
+      );
     }
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-primary-light font-sans overflow-hidden flex items-center justify-center px-4 sm:px-8 py-10">
+    <div className="bg-primary-light relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10 font-sans sm:px-8">
       <div
-        className="absolute w-full h-full sm:w-200 sm:h-200 z-0 rounded-full pointer-events-none"
+        className="pointer-events-none absolute z-0 h-full w-full rounded-full sm:h-200 sm:w-200"
         style={{
           background: "radial-gradient(circle, #7096FF 0%, #3868FD 87%)",
           opacity: 0.7,
         }}
       />
 
-      <div className="relative z-10 w-full max-w-125 bg-white rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] px-8 py-12 sm:px-12 flex flex-col">
-        <div className="flex items-center gap-2 mb-8">
-          <img src={iconMoneyWallet} alt="Logo" className="w-8 h-8" />
-          <h1 className="text-primary font-medium text-xl">E-Wallet</h1>
+      <div className="relative z-10 flex w-full max-w-125 flex-col rounded-[30px] bg-white px-8 py-12 shadow-[0_20px_50px_rgba(0,0,0,0.15)] sm:px-12">
+        <div className="mb-8 flex items-center gap-2">
+          <img src={iconMoneyWallet} alt="Logo" className="h-8 w-8" />
+          <h1 className="text-primary text-xl font-medium">E-Wallet</h1>
         </div>
 
-        <h1 className="text-[30px] font-medium text-black mb-2 leading-snug">
+        <h1 className="mb-2 text-[30px] leading-snug font-medium text-black">
           Fill Out Form Correctly 👋
         </h1>
-        <p className="text-base font-normal text-grey leading-relaxed mb-8">
+        <p className="text-grey mb-8 text-base leading-relaxed font-normal">
           We will send new password to your email
         </p>
 
@@ -95,7 +98,7 @@ const ForgotPassword = () => {
         <div className="mt-8 text-center">
           <Link
             to="/auth/login"
-            className="text-base text-grey font-medium hover:text-primary transition-colors"
+            className="text-grey hover:text-primary text-base font-medium transition-colors"
           >
             Back to Login
           </Link>

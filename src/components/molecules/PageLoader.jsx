@@ -11,10 +11,10 @@ const PageLoader = ({ isOpen, text = "Loading, please wait..." }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[3px] transition-opacity animate-in fade-in duration-300">
-      <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center justify-center gap-4 border border-gray-100">
+    <div className="animate-in fade-in fixed inset-0 z-9999 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[3px] transition-opacity duration-300">
+      <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-xl">
         <Spinner size={40} className="text-primary" />
-        <span className="text-gray-600 font-medium text-sm animate-pulse">
+        <span className="animate-pulse text-sm font-medium text-gray-600">
           {text}
         </span>
       </div>

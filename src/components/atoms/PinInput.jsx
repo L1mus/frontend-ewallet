@@ -55,9 +55,9 @@ const PinInput = ({ length = 6, onChange, error, className }) => {
   };
 
   return (
-    <div className={cn("flex flex-col items-center gap-2 w-full", className)}>
+    <div className={cn("flex w-full flex-col items-center gap-2", className)}>
       <div
-        className="flex justify-between sm:justify-center gap-3 sm:gap-6 w-full"
+        className="flex w-full justify-between gap-3 sm:justify-center sm:gap-6"
         onPaste={handlePaste}
       >
         {pin.map((digit, index) => (
@@ -71,11 +71,11 @@ const PinInput = ({ length = 6, onChange, error, className }) => {
             onChange={(e) => handleChange(index, e)}
             onKeyDown={(e) => handleKeyDown(index, e)}
             className={cn(
-              "w-11 sm:w-15 h-12.5 text-center text-3xl font-medium text-black bg-transparent outline-none transition-colors duration-200",
-              "border-b-2 border-transparent rounded-none",
+              "h-12.5 w-11 bg-transparent text-center text-3xl font-medium text-black transition-colors duration-200 outline-none sm:w-15",
+              "rounded-none border-b-2 border-transparent",
               error
                 ? "border-b-danger text-danger"
-                : "border-b-[#E8E8E8] focus:border-b-primary",
+                : "focus:border-b-primary border-b-[#E8E8E8]",
               digit && !error ? "border-b-primary" : "",
             )}
           />
@@ -83,7 +83,7 @@ const PinInput = ({ length = 6, onChange, error, className }) => {
       </div>
 
       {error && (
-        <span className="text-sm font-medium text-danger mt-2 text-center">
+        <span className="text-danger mt-2 text-center text-sm font-medium">
           {error}
         </span>
       )}

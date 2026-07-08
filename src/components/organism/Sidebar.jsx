@@ -8,14 +8,14 @@ const Sidebar = ({ isOpen, onClose }) => {
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-black/50 md:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden"
         />
       )}
 
       <aside
         className={cn(
-          "flex flex-col bg-white border-l md:border-r md:border-l-0 border-grey-light",
-          "md:flex md:w-1/6 md:min-w-48 md:sticky md:top-0 md:h-screen md:translate-x-0",
+          "border-grey-light flex flex-col border-l bg-white md:border-r md:border-l-0",
+          "md:sticky md:top-0 md:flex md:h-screen md:w-1/6 md:min-w-48 md:translate-x-0",
           "fixed top-0 right-0 z-50 h-full w-3/4 max-w-xs",
           "transition-transform duration-300 ease-in-out",
           isOpen
@@ -23,11 +23,11 @@ const Sidebar = ({ isOpen, onClose }) => {
             : "translate-x-full md:translate-x-0",
         )}
       >
-        <div className="flex justify-between items-center px-6 pt-6 md:hidden">
-          <span className="font-bold text-lg text-primary">Menu</span>
+        <div className="flex items-center justify-between px-6 pt-6 md:hidden">
+          <span className="text-primary text-lg font-bold">Menu</span>
           <button
             onClick={onClose}
-            className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-grey-light text-black-light cursor-pointer"
+            className="hover:bg-grey-light text-black-light flex h-8 w-8 cursor-pointer items-center justify-center rounded-md"
           >
             <X size={20} />
           </button>

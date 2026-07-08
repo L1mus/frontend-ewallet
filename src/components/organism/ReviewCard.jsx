@@ -11,28 +11,28 @@ import Star from "../../assets/icons/star.svg";
 
 export const ReviewCard = ({ avatar, name, rating = 5, text }) => {
   return (
-    <div className="w-full max-w-92 min-h-100 bg-[#E8E8E84D] rounded-xl flex flex-col items-center text-center shadow-sm border border-black/5 shrink-0 lg:shrink">
-      <div className="py-10 px-6 flex flex-col items-center h-full">
+    <div className="flex min-h-100 w-full max-w-92 shrink-0 flex-col items-center rounded-xl border border-black/5 bg-[#E8E8E84D] text-center shadow-sm lg:shrink">
+      <div className="flex h-full flex-col items-center px-6 py-10">
         <img
           src={avatar}
           alt={name}
-          className="w-14.5 h-14.5 rounded-full object-cover mb-4 shadow-sm"
+          className="mb-4 h-14.5 w-14.5 rounded-full object-cover shadow-sm"
         />
 
-        <h4 className="text-lg font-bold text-black mb-2">{name}</h4>
+        <h4 className="mb-2 text-lg font-bold text-black">{name}</h4>
 
-        <div className="flex items-center gap-2 mb-6">
+        <div className="mb-6 flex items-center gap-2">
           <div className="flex gap-1">
             {[...Array(5)].map((_, i) => (
-              <img key={i} src={Star} alt="star" className="w-4 h-4" />
+              <img key={i} src={Star} alt="star" className="h-4 w-4" />
             ))}
           </div>
-          <span className="text-black font-bold text-base">
+          <span className="text-base font-bold text-black">
             {rating.toFixed(1)}
           </span>
         </div>
 
-        <div className="text-3xl leading-none text-black mb-4 font-extrabold">
+        <div className="mb-4 text-3xl leading-none font-extrabold text-black">
           “
         </div>
 

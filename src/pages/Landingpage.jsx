@@ -83,23 +83,23 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden bg-white">
       <Header variant="landing" />
 
-      <section className="w-full bg-white px-6 lg:px-33 lg:min-h-165.5 flex flex-col lg:flex-row items-center justify-between gap-12 py-16 lg:py-0">
-        <div className="w-full lg:w-[55%] flex flex-col items-start">
-          <h1 className="text-4xl lg:text-6xl font-bold text-black leading-[1.1] mb-6 max-w-200">
+      <section className="flex w-full flex-col items-center justify-between gap-12 bg-white px-6 py-16 lg:min-h-165.5 lg:flex-row lg:px-33 lg:py-0">
+        <div className="flex w-full flex-col items-start lg:w-[55%]">
+          <h1 className="mb-6 max-w-200 text-4xl leading-[1.1] font-bold text-black lg:text-6xl">
             Smart Way to Your Financial Business
           </h1>
 
-          <p className="text-grey text-base lg:text-lg leading-relaxed max-w-115 mb-10">
+          <p className="text-grey mb-10 max-w-115 text-base leading-relaxed lg:text-lg">
             We bring you a mobile app for banking problems that oftenly wasting
             much of your times.
           </p>
 
           <Button
             variant="rectangelWhite"
-            className="mb-12 px-10 h-14.5 text-base border border-primary"
+            className="border-primary mb-12 h-14.5 border px-10 text-base"
           >
             Get Started
           </Button>
@@ -110,18 +110,20 @@ const LandingPage = () => {
               <img
                 src={logoGplay}
                 alt="Play Store"
-                className="h-7.5 object-contain cursor-pointer hover:opacity-80 transition-opacity"
+                className="h-7.5 cursor-pointer object-contain transition-opacity hover:opacity-80"
               />
               <img
                 src={logoPlayStore}
                 alt="App Store"
-                className="h-7.5 object-contain cursor-pointer hover:opacity-80 transition-opacity"
+                className="h-7.5 cursor-pointer object-contain transition-opacity hover:opacity-80"
               />
             </div>
           </div>
         </div>
 
-        <div className="w-full lg:w-[45%] flex justify-end">
+        <div className="mt-2 block bg-blue-500 p-4 text-white"></div>
+
+        <div className="flex w-full justify-end lg:w-[45%]">
           <img
             src={logoHero}
             alt="Hero App Illustration"
@@ -130,43 +132,43 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className="w-full bg-white px-6 lg:px-30 h-auto lg:h-43 py-10 lg:py-0 flex flex-wrap justify-center lg:justify-between items-center gap-10">
+      <section className="flex h-auto w-full flex-wrap items-center justify-center gap-10 bg-white px-6 py-10 lg:h-43 lg:justify-between lg:px-30 lg:py-0">
         <img
           src={logoMicrosoft}
           alt="Microsoft"
-          className=" object-contain opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+          className="cursor-pointer object-contain opacity-60 transition-opacity hover:opacity-100"
         />
         <img
           src={logoDropbox}
           alt="Dropbox"
-          className=" object-contain opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+          className="cursor-pointer object-contain opacity-60 transition-opacity hover:opacity-100"
         />
         <img
           src={logoHnm}
           alt="H&M"
-          className="object-contain opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+          className="cursor-pointer object-contain opacity-60 transition-opacity hover:opacity-100"
         />
         <img
           src={logoAirbnb}
           alt="Airbnb"
-          className=" object-contain opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+          className="cursor-pointer object-contain opacity-60 transition-opacity hover:opacity-100"
         />
         <img
           src={logoCanon}
           alt="Canon"
-          className="object-contain opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+          className="cursor-pointer object-contain opacity-60 transition-opacity hover:opacity-100"
         />
         <img
           src={logodell}
           alt="Dell"
-          className=" object-contain opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+          className="cursor-pointer object-contain opacity-60 transition-opacity hover:opacity-100"
         />
       </section>
 
       <section className="my-42 px-8">
-        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
+        <div className="flex flex-col items-center gap-8 lg:flex-row lg:gap-0">
           <div>
-            <h2 className="text-4xl lg:text-44xl font-medium text-black mb-5 leading-[1.2] w-full">
+            <h2 className="lg:text-44xl mb-5 w-full text-4xl leading-[1.2] font-medium text-black">
               About The Aplication
             </h2>
 
@@ -176,7 +178,7 @@ const LandingPage = () => {
             </p>
           </div>
 
-          <div className="w-full flex flex-col md:flex-row flex-nowrap gap-5 justify-center">
+          <div className="flex w-full flex-col flex-nowrap justify-center gap-5 md:flex-row">
             <AboutCard
               icon={logoHeadphone}
               title="24/7 Support"
@@ -196,29 +198,29 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className=" bg-primary py-32 lg:py-40">
-        <div className="flex flex-col lg:flex-row items-center">
-          <div className="w-full lg:w-[40%] flex justify-center lg:justify-start">
+      <section className="bg-primary py-32 lg:py-40">
+        <div className="flex flex-col items-center lg:flex-row">
+          <div className="flex w-full justify-center lg:w-[40%] lg:justify-start">
             <div className="relative w-70 lg:w-87.5">
               <img
                 src={logoMobile}
                 alt="Zwallet Dashboard"
-                className="w-full h-full object-contain drop-shadow-[0_35px_60px_rgba(0,0,0,0.3)]"
+                className="h-full w-full object-contain drop-shadow-[0_35px_60px_rgba(0,0,0,0.3)]"
               />
             </div>
           </div>
 
-          <div className="w-full lg:w-full lg:max-w-200 flex flex-col items-start text-white">
-            <h2 className="text-[32px] lg:text-[48px] font-bold leading-tight mb-6 lg:whitespace-nowrap">
+          <div className="flex w-full flex-col items-start text-white lg:w-full lg:max-w-200">
+            <h2 className="mb-6 text-[32px] leading-tight font-bold lg:text-[48px] lg:whitespace-nowrap">
               All the Great Zwallet Features.
             </h2>
 
-            <p className="text-white/80 text-base lg:text-lg leading-relaxed lg:max-w-200">
+            <p className="text-base leading-relaxed text-white/80 lg:max-w-200 lg:text-lg">
               We have some great features from the application and it's totally
               free to use by all users around the world.
             </p>
 
-            <div className="flex flex-col gap-7.5 w-full mb-12">
+            <div className="mb-12 flex w-full flex-col gap-7.5">
               {[
                 {
                   title: "Small Fee",
@@ -237,16 +239,16 @@ const LandingPage = () => {
                 },
               ].map((item, index) => (
                 <div key={index} className="flex items-start gap-5">
-                  <div className="w-13 h-13 bg-white rounded-full flex items-center justify-center shrink-0 shadow-lg">
+                  <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-white shadow-lg">
                     <img
                       src={item.icon}
                       alt=""
-                      className="w-6 h-6 object-contain"
+                      className="h-6 w-6 object-contain"
                     />
                   </div>
                   <div className="flex flex-col pt-1">
-                    <h4 className="text-xl font-bold mb-1">{item.title}</h4>
-                    <p className="text-white text-base leading-relaxed max-w-100">
+                    <h4 className="mb-1 text-xl font-bold">{item.title}</h4>
+                    <p className="max-w-100 text-base leading-relaxed text-white">
                       {item.desc}
                     </p>
                   </div>
@@ -256,7 +258,7 @@ const LandingPage = () => {
 
             <Button
               variant="rectangelWhite"
-              className={"font-semibold w-46 hover:opacity-85"}
+              className={"w-46 font-semibold hover:opacity-85"}
             >
               Get Started
             </Button>
@@ -264,24 +266,24 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className="w-full py-10 lg:py-22 bg-white overflow-hidden flex flex-col items-center">
-        <div className="container mx-auto px-6 text-center mb-16">
-          <h2 className="text-[32px] lg:text-[48px] font-medium text-black mb-4">
+      <section className="flex w-full flex-col items-center overflow-hidden bg-white py-10 lg:py-22">
+        <div className="container mx-auto mb-16 px-6 text-center">
+          <h2 className="mb-4 text-[32px] font-medium text-black lg:text-[48px]">
             Here From Our Customer
           </h2>
-          <p className="text-grey text-base lg:text-lg max-w-200 mx-auto">
+          <p className="text-grey mx-auto max-w-200 text-base lg:text-lg">
             We always do our best for our customers to stay comfortable using
             the applications we provide
           </p>
         </div>
 
-        <div className="relative w-full max-w-360 mx-auto px-6 lg:px-30">
+        <div className="relative mx-auto w-full max-w-360 px-6 lg:px-30">
           <Button
             onClick={prevReview}
             typeButton="cicle"
             variant="cicleBlue"
             className={
-              "lg:flex items-center justify-center absolute left-4 xl:left-10 top-1/2 -translate-y-1/2"
+              "absolute top-1/2 left-4 -translate-y-1/2 items-center justify-center lg:flex xl:left-10"
             }
             isHaveIcon={true}
             Icon={ChevronLeft}
@@ -289,7 +291,7 @@ const LandingPage = () => {
             isDisabled={true}
           ></Button>
 
-          <div className="flex flex-row lg:grid lg:grid-cols-3 gap-6 lg:gap-11 w-full overflow-x-auto lg:overflow-x-visible no-scrollbar pb-4">
+          <div className="no-scrollbar flex w-full flex-row gap-6 overflow-x-auto pb-4 lg:grid lg:grid-cols-3 lg:gap-11 lg:overflow-x-visible">
             {reviews.map((review) => (
               <ReviewCard
                 key={review.id}
@@ -305,7 +307,7 @@ const LandingPage = () => {
             onClick={nextReview}
             typeButton="cicle"
             className={
-              "lg:flex items-center justify-center absolute right-4 xl:right-10 top-1/2 -translate-y-1/2"
+              "absolute top-1/2 right-4 -translate-y-1/2 items-center justify-center lg:flex xl:right-10"
             }
             variant="cicleBlue"
             isHaveIcon={true}
@@ -313,14 +315,14 @@ const LandingPage = () => {
           ></Button>
         </div>
 
-        <div className="flex items-center gap-3 mt-12 lg:mt-16">
+        <div className="mt-12 flex items-center gap-3 lg:mt-16">
           {reviews.map((_, index) => (
             <div
               key={index}
-              className={`transition-all duration-300 rounded-full ${
+              className={`rounded-full transition-all duration-300 ${
                 index === activeIndex
-                  ? "w-10 h-3 bg-primary"
-                  : "w-3 h-3 bg-[#E5E7EB]"
+                  ? "bg-primary h-3 w-10"
+                  : "h-3 w-3 bg-[#E5E7EB]"
               }`}
             />
           ))}

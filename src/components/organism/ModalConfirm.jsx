@@ -21,17 +21,17 @@ const ModalConfirm = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="text-center">
-        <div className="w-14 h-14 rounded-full bg-danger/10 flex items-center justify-center mx-auto mb-4">
-          <AlertCircle className="w-8 h-8 text-danger" />
+        <div className="bg-danger/10 mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full">
+          <AlertCircle className="text-danger h-8 w-8" />
         </div>
-        <h3 className="text-xl font-extrabold text-black mb-3">{title}</h3>
-        <p className="text-grey text-sm mb-8 leading-relaxed">{message}</p>
+        <h3 className="mb-3 text-xl font-extrabold text-black">{title}</h3>
+        <p className="text-grey mb-8 text-sm leading-relaxed">{message}</p>
 
         <div className="flex flex-col gap-3">
           <button
             onClick={onConfirm}
             className={cn(
-              "w-full py-3 rounded-xl font-bold text-sm transition-all cursor-pointer",
+              "w-full cursor-pointer rounded-xl py-3 text-sm font-bold transition-all",
               variantStyles[variant],
             )}
           >
@@ -40,7 +40,7 @@ const ModalConfirm = ({
 
           <button
             onClick={onClose}
-            className="w-full py-3 rounded-xl font-bold text-sm text-grey hover:text-gray-600 transition-all cursor-pointer"
+            className="text-grey w-full cursor-pointer rounded-xl py-3 text-sm font-bold transition-all hover:text-gray-600"
           >
             Cancel
           </button>

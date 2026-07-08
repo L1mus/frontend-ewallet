@@ -6,17 +6,17 @@ import Button from "../../components/atoms/Button";
 import imgBill from "../../assets/images/wallet.png";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import {userService} from "../../services/userService.js";
-import {authActions} from "../../redux/slice/authSlice.js";
+import { userService } from "../../services/userService.js";
+import { authActions } from "../../redux/slice/authSlice.js";
 
 const CreatePin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [step,       setStep]       = useState(1);
-  const [firstPin,   setFirstPin]   = useState("");
+  const [step, setStep] = useState(1);
+  const [firstPin, setFirstPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
-  const [error,      setError]      = useState("");
-  const [isLoading,  setIsLoading]  = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleNextStep = async () => {
     if (step === 1) {
@@ -43,7 +43,7 @@ const CreatePin = () => {
 
     try {
       await userService.createPin({
-        new_pin:         confirmPin,
+        new_pin: confirmPin,
         confirm_new_pin: confirmPin,
       });
 
@@ -54,8 +54,8 @@ const CreatePin = () => {
       navigate("/dashboard");
     } catch (err) {
       const message =
-          err?.response?.data?.message ||
-          (typeof err === "string" ? err : "Failed to create PIN");
+        err?.response?.data?.message ||
+        (typeof err === "string" ? err : "Failed to create PIN");
       setError(message);
       toast.error(message);
     } finally {
@@ -64,51 +64,51 @@ const CreatePin = () => {
   };
 
   return (
-      <AuthLayout
-          title={step === 1 ? "Create Security PIN" : "Confirm Your PIN"}
-          subtitle={
-            step === 1
-                ? "Create a 6-digit PIN to secure your E-Wallet transactions."
-                : "Please type your 6-digit PIN again to confirm."
-          }
-          imagePath={imgBill}
-      >
-        <div className="w-full h-full flex flex-col gap-8 mt-2">
-          <PinInput
-              key={step}
-              length={6}
-              onChange={step === 1 ? setFirstPin : setConfirmPin}
-              error={error}
-          />
+    <AuthLayout
+      title={step === 1 ? "Create Security PIN" : "Confirm Your PIN"}
+      subtitle={
+        step === 1
+          ? "Create a 6-digit PIN to secure your E-Wallet transactions."
+          : "Please type your 6-digit PIN again to confirm."
+      }
+      imagePath={imgBill}
+    >
+      <div className="mt-2 flex h-full w-full flex-col gap-8">
+        <PinInput
+          key={step}
+          length={6}
+          onChange={step === 1 ? setFirstPin : setConfirmPin}
+          error={error}
+        />
 
-          <Button
-              variant="rectangelBlue"
-              isFullWidth={true}
-              onClick={handleNextStep}
-              isLoading={isLoading}
+        <Button
+          variant="rectangelBlue"
+          isFullWidth={true}
+          onClick={handleNextStep}
+          isLoading={isLoading}
+        >
+          {isLoading
+            ? "Saving PIN..."
+            : step === 1
+              ? "Next Step"
+              : "Confirm PIN"}
+        </Button>
+
+        {step === 2 && (
+          <button
+            type="button"
+            onClick={() => {
+              setStep(1);
+              setConfirmPin("");
+              setError("");
+            }}
+            className="text-grey hover:text-primary cursor-pointer text-center text-sm font-medium transition-colors"
           >
-            {isLoading
-                ? "Saving PIN..."
-                : step === 1
-                    ? "Next Step"
-                    : "Confirm PIN"}
-          </Button>
-
-          {step === 2 && (
-              <button
-                  type="button"
-                  onClick={() => {
-                    setStep(1);
-                    setConfirmPin("");
-                    setError("");
-                  }}
-                  className="text-center text-sm font-medium text-grey hover:text-primary transition-colors cursor-pointer"
-              >
-                Back to Create PIN
-              </button>
-          )}
-        </div>
-      </AuthLayout>
+            Back to Create PIN
+          </button>
+        )}
+      </div>
+    </AuthLayout>
   );
 };
 

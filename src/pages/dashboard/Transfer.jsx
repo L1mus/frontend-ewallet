@@ -49,80 +49,85 @@ const Transfer = () => {
   };
 
   return (
-      <div className="w-full pb-10">
-        <div className="mb-6">
-          <div className="hidden md:flex items-center gap-2 mb-6 text-primary">
-            <Send className={"text-2xl font-bold"} />
-            <h1 className="text-xl font-bold text-black">Transfer Money</h1>
-          </div>
+    <div className="w-full pb-10">
+      <div className="mb-6">
+        <div className="text-primary mb-6 hidden items-center gap-2 md:flex">
+          <Send className={"text-2xl font-bold"} />
+          <h1 className="text-xl font-bold text-black">Transfer Money</h1>
+        </div>
+        <div>
+          <Stepper
+            steps={["Find People", "Set Nominal", "Finish"]}
+            activeStep={0}
+          />
+        </div>
+      </div>
+
+      <div className="md:border-grey-light w-full bg-white p-3 md:rounded-xl md:border md:p-8 md:shadow-sm">
+        <div className="mb-8 flex flex-col justify-between gap-4 px-4 md:flex-row md:items-start md:px-0">
           <div>
-            <Stepper steps={["Find People", "Set Nominal", "Finish"]} activeStep={0} />
+            <h2 className="text-lg font-bold text-black">Find People</h2>
+            <p className="text-grey mt-1 text-sm font-medium">
+              {filteredPeople.length} Result Found
+              {searchQuery && ` For ${searchQuery}`}
+            </p>
+          </div>
+          <div className="relative w-full md:w-87.5">
+            <Input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Enter Number Or Full Name"
+            />
+            <Search className="text-grey absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
           </div>
         </div>
-
-        <div className="w-full bg-white md:border md:border-grey-light md:rounded-xl md:shadow-sm p-3 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-start justify-between mb-8 px-4 md:px-0 gap-4">
-            <div>
-              <h2 className="font-bold text-black text-lg">Find People</h2>
-              <p className="text-sm font-medium text-grey mt-1">
-                {filteredPeople.length} Result Found
-                {searchQuery && ` For ${searchQuery}`}
-              </p>
-            </div>
-            <div className="relative w-full md:w-87.5">
-              <Input
-                  type="text"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder="Enter Number Or Full Name"
-              />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-grey w-4 h-4" />
-            </div>
-          </div>
-          <div className="w-full overflow-x-auto">
-            <Table>
-              {filteredPeople.length > 0 ? (
-                  filteredPeople.map((item, index) => (
-                      <TableContent
-                          key={index}
-                          onClick={() => navigate("/transfer/detail", { state: { receiver: item } })}
-                          className={`cursor-pointer hover:bg-primary/5 transition-colors ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
-                      >
-                        <td className="px-2 py-4 md:px-6">
-                          <div className="flex items-center gap-3 md:gap-6">
-                            <Avatar
-                                imageSrc={item.profile_picture_url}
-                                className="w-12 h-12 rounded-lg shrink-0"
-                            />
-                            <div className="flex flex-row justify-between items-center flex-1">
+        <div className="w-full overflow-x-auto">
+          <Table>
+            {filteredPeople.length > 0 ? (
+              filteredPeople.map((item, index) => (
+                <TableContent
+                  key={index}
+                  onClick={() =>
+                    navigate("/transfer/detail", { state: { receiver: item } })
+                  }
+                  className={`hover:bg-primary/5 cursor-pointer transition-colors ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+                >
+                  <td className="px-2 py-4 md:px-6">
+                    <div className="flex items-center gap-3 md:gap-6">
+                      <Avatar
+                        imageSrc={item.profile_picture_url}
+                        className="h-12 w-12 shrink-0 rounded-lg"
+                      />
+                      <div className="flex flex-1 flex-row items-center justify-between">
                         <span className="text-grey font-bold md:font-medium">
                           {item.full_name}
                         </span>
-                              <span className="text-grey text-sm mt-0.5">
+                        <span className="text-grey mt-0.5 text-sm">
                           {item.phone || `-`}
                         </span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="hidden md:table-cell px-2 py-4 md:px-6 text-grey text-center">
-                          {item.phone || "-"}
-                        </td>
-                        <td className="px-2 py-4 md:px-6 text-right">
-                          <Star className="text-gray-400 hover:text-yellow-400 w-5 h-5 ml-auto" />
-                        </td>
-                      </TableContent>
-                  ))
-              ) : (
-                  <tr className="bg-white">
-                    <td colSpan="3" className="py-20 text-center text-grey italic">
-                      No people found
-                    </td>
-                  </tr>
-              )}
-            </Table>
-          </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="text-grey hidden px-2 py-4 text-center md:table-cell md:px-6">
+                    {item.phone || "-"}
+                  </td>
+                  <td className="px-2 py-4 text-right md:px-6">
+                    <Star className="ml-auto h-5 w-5 text-gray-400 hover:text-yellow-400" />
+                  </td>
+                </TableContent>
+              ))
+            ) : (
+              <tr className="bg-white">
+                <td colSpan="3" className="text-grey py-20 text-center italic">
+                  No people found
+                </td>
+              </tr>
+            )}
+          </Table>
         </div>
       </div>
+    </div>
   );
 };
 

@@ -7,13 +7,13 @@ const Avatar = ({ isClickable = false, imageSrc, className, ...props }) => {
       {isClickable ? (
         <button
           className={cn(
-            "w-12 h-12 shadow-lg rounded-full shadow-black border-none cursor-pointer overflow-hidden",
+            "h-12 w-12 cursor-pointer overflow-hidden rounded-full border-none shadow-lg shadow-black",
             className,
           )}
           {...props}
         >
           <img
-            className="w-full h-auto object-contain"
+            className="h-auto w-full object-contain"
             src={imageSrc}
             alt="icon Avatar"
           />
@@ -21,13 +21,13 @@ const Avatar = ({ isClickable = false, imageSrc, className, ...props }) => {
       ) : (
         <div
           className={cn(
-            "w-12 h-12 shadow-lg rounded-full shadow-black border-none cursor-pointer overflow-hidden",
+            "h-12 w-12 cursor-pointer overflow-hidden rounded-full border-none shadow-lg shadow-black",
             className,
           )}
           {...props}
         >
           <img
-            className="w-full h-auto object-contain"
+            className="h-auto w-full object-contain"
             src={imageSrc}
             alt="icon Avatar"
           />

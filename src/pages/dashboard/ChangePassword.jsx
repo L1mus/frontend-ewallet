@@ -26,7 +26,11 @@ const ChangePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.current_password || !formData.new_password || !formData.confirm_password) {
+    if (
+      !formData.current_password ||
+      !formData.new_password ||
+      !formData.confirm_password
+    ) {
       return toast.error("Please fill in all password fields");
     }
 
@@ -36,10 +40,10 @@ const ChangePassword = () => {
 
     try {
       const result = await dispatch(
-          authActions.changePasswordUser({
-            current_password: formData.current_password,
-            new_password: formData.new_password,
-          }),
+        authActions.changePasswordUser({
+          current_password: formData.current_password,
+          new_password: formData.new_password,
+        }),
       ).unwrap();
 
       dispatch(authActions.syncActiveSession(result));
@@ -51,59 +55,59 @@ const ChangePassword = () => {
   };
 
   return (
-      <div className="w-full pb-10">
-        <div className="flex items-center gap-2 mb-6 text-primary px-4 md:px-0">
-          <User className={"text-2xl font-bold"} />
-          <h1 className="text-xl font-bold text-black">Profile</h1>
-        </div>
-
-        <div className="w-full bg-white md:border md:border-gray-200 md:rounded-xl md:shadow-sm p-4 md:p-8">
-          <h2 className="font-bold text-black text-lg mb-6">Change Password</h2>
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <Input
-                label="Current Password"
-                name="current_password"
-                type="password"
-                value={formData.current_password}
-                onChange={handleInputChange}
-                placeholder="Enter Your Current Password"
-                disabled={isLoading}
-            />
-
-            <Input
-                label="New Password"
-                name="new_password"
-                type="password"
-                value={formData.new_password}
-                onChange={handleInputChange}
-                placeholder="Enter Your New Password"
-                disabled={isLoading}
-            />
-
-            <Input
-                label="Confirm New Password"
-                name="confirm_password"
-                type="password"
-                value={formData.confirm_password}
-                onChange={handleInputChange}
-                placeholder="Re-Type Your New Password"
-                disabled={isLoading}
-            />
-
-            <div className="mt-4">
-              <Button
-                  type="submit"
-                  isLoading={isLoading}
-                  isFullWidth={true}
-                  className="py-3.5 font-bold shadow-md"
-              >
-                Submit
-              </Button>
-            </div>
-          </form>
-        </div>
+    <div className="w-full pb-10">
+      <div className="text-primary mb-6 flex items-center gap-2 px-4 md:px-0">
+        <User className={"text-2xl font-bold"} />
+        <h1 className="text-xl font-bold text-black">Profile</h1>
       </div>
+
+      <div className="w-full bg-white p-4 md:rounded-xl md:border md:border-gray-200 md:p-8 md:shadow-sm">
+        <h2 className="mb-6 text-lg font-bold text-black">Change Password</h2>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <Input
+            label="Current Password"
+            name="current_password"
+            type="password"
+            value={formData.current_password}
+            onChange={handleInputChange}
+            placeholder="Enter Your Current Password"
+            disabled={isLoading}
+          />
+
+          <Input
+            label="New Password"
+            name="new_password"
+            type="password"
+            value={formData.new_password}
+            onChange={handleInputChange}
+            placeholder="Enter Your New Password"
+            disabled={isLoading}
+          />
+
+          <Input
+            label="Confirm New Password"
+            name="confirm_password"
+            type="password"
+            value={formData.confirm_password}
+            onChange={handleInputChange}
+            placeholder="Re-Type Your New Password"
+            disabled={isLoading}
+          />
+
+          <div className="mt-4">
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              isFullWidth={true}
+              className="py-3.5 font-bold shadow-md"
+            >
+              Submit
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

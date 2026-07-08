@@ -6,20 +6,20 @@ import Header from "../organism/Header";
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
-    <div className="flex flex-col min-h-screen bg-grey-light/30">
+    <div className="bg-grey-light/30 flex min-h-screen flex-col">
       <Header
         isLogin={true}
         isDashboard={true}
         onOpenSidebar={() => setIsSidebarOpen(true)}
       />
 
-      <div className="flex flex-1 relative">
+      <div className="relative flex flex-1">
         <Sidebar
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
         />
 
-        <main className="flex-1 p-6 md:p-7 bg-white">
+        <main className="flex-1 bg-white p-6 md:p-7">
           <Outlet />
         </main>
       </div>

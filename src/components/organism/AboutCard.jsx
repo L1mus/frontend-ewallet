@@ -1,14 +1,14 @@
 export const AboutCard = ({ icon, title, description }) => {
   return (
-    <div className="w-full h-72 md:w-55 bg-linear-to-b from-primary-light to-primary rounded-xl flex flex-col items-center text-center text-white shadow-lg transition-all duration-300 hover:-translate-y-2 cursor-default shrink-0">
-      <div className="pt-8.5 flex flex-col items-center h-full">
-        <div className="w-14.5 h-14.5 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm">
-          <img src={icon} alt={title} className="w-6 h-6 object-contain" />
+    <div className="from-primary-light to-primary flex h-72 w-full shrink-0 cursor-default flex-col items-center rounded-xl bg-linear-to-b text-center text-white shadow-lg transition-all duration-300 hover:-translate-y-2 md:w-55">
+      <div className="flex h-full flex-col items-center pt-8.5">
+        <div className="mb-6 flex h-14.5 w-14.5 items-center justify-center rounded-full bg-white shadow-sm">
+          <img src={icon} alt={title} className="h-6 w-6 object-contain" />
         </div>
 
-        <h3 className="text-base font-bold mb-4 leading-tight px-2">{title}</h3>
+        <h3 className="mb-4 px-2 text-base leading-tight font-bold">{title}</h3>
 
-        <p className="text-white/80 text-xs leading-relaxed px-3 mb-8.5">
+        <p className="mb-8.5 px-3 text-xs leading-relaxed text-white/80">
           {description}
         </p>
       </div>

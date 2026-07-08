@@ -2,8 +2,8 @@ import React from "react";
 
 const Table = ({ children }) => {
   return (
-    <div className="w-full overflow-x-auto custom-scrollbar">
-      <table className="w-full border-collapse min-w-0 md:min-w-175 table-auto">
+    <div className="custom-scrollbar w-full overflow-x-auto">
+      <table className="w-full min-w-0 table-auto border-collapse md:min-w-175">
         <tbody>{children}</tbody>
       </table>
     </div>

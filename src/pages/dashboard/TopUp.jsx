@@ -69,29 +69,31 @@ const TopUp = () => {
 
   return (
     <div className="w-full pb-10">
-      <div className="hidden md:flex items-center gap-2 mb-6 text-primary">
+      <div className="text-primary mb-6 hidden items-center gap-2 md:flex">
         <Upload className={"text-2xl"} />
         <h1 className="text-xl font-bold text-black">Top Up Account</h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-        <div className="lg:col-span-2 flex flex-col gap-8 bg-white md:border md:border-grey-light md:rounded-xl md:shadow-sm p-4 md:p-8">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
+        <div className="md:border-grey-light flex flex-col gap-8 bg-white p-4 md:rounded-xl md:border md:p-8 md:shadow-sm lg:col-span-2">
           <div>
-            <h3 className="font-bold text-black text-lg mb-4">
+            <h3 className="mb-4 text-lg font-bold text-black">
               Account Information
             </h3>
-            <div className="bg-grey-light rounded-xl p-4 flex items-center gap-4">
+            <div className="bg-grey-light flex items-center gap-4 rounded-xl p-4">
               <Avatar
                 imageSrc={loginUser?.profile_picture_url}
-                className="w-21 h-21 rounded-xl object-cover shadow-sm"
+                className="h-21 w-21 rounded-xl object-cover shadow-sm"
               />
               <div className="flex flex-col items-start gap-1">
-                <span className="font-bold text-black text-base">
+                <span className="text-base font-bold text-black">
                   {loginUser?.full_name}
                 </span>
-                <span className="text-grey text-sm">{loginUser?.phone || "-"}</span>
+                <span className="text-grey text-sm">
+                  {loginUser?.phone || "-"}
+                </span>
                 {loginUser?.isVerified && (
-                  <span className="inline-flex items-center gap-1 bg-primary text-white text-xs font-bold px-2 py-1 rounded-md mt-1">
+                  <span className="bg-primary mt-1 inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-bold text-white">
                     <BadgeCheck size={14} /> Verified
                   </span>
                 )}
@@ -100,13 +102,13 @@ const TopUp = () => {
           </div>
 
           <div>
-            <h3 className="font-bold text-black text-lg mb-1">Amount</h3>
-            <p className="text-grey text-sm mb-4">
+            <h3 className="mb-1 text-lg font-bold text-black">Amount</h3>
+            <p className="text-grey mb-4 text-sm">
               Type the amount you want to transfer to your e-wallet account
             </p>
             <div className="relative w-full">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Banknote className="text-gray-400 w-5 h-5" />
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <Banknote className="h-5 w-5 text-gray-400" />
               </div>
               <input
                 type="number"
@@ -120,16 +122,16 @@ const TopUp = () => {
                 onChange={handleNominalChange}
                 disabled={isLoading}
                 placeholder="Enter Nominal Transfer"
-                className="w-full border border-grey-light rounded-xl pl-12 pr-4 py-3.5 outline-none text-grey font-medium focus:border-primary transition-colors shadow-sm"
+                className="border-grey-light text-grey focus:border-primary w-full rounded-xl border py-3.5 pr-4 pl-12 font-medium shadow-sm transition-colors outline-none"
               />
             </div>
           </div>
 
           <div>
-            <h3 className="font-bold text-black text-lg mb-1">
+            <h3 className="mb-1 text-lg font-bold text-black">
               Payment Method
             </h3>
-            <p className="text-grey text-sm mb-4">
+            <p className="text-grey mb-4 text-sm">
               Choose your payment method for top up account
             </p>
             <div className="flex flex-col gap-3">
@@ -150,34 +152,36 @@ const TopUp = () => {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-white md:border border-grey-light md:rounded-xl md:shadow-sm p-4 md:p-6 lg:sticky lg:top-8">
-            <h3 className="font-bold text-black text-lg mb-6">Payment</h3>
+          <div className="border-grey-light bg-white p-4 md:rounded-xl md:border md:p-6 md:shadow-sm lg:sticky lg:top-8">
+            <h3 className="mb-6 text-lg font-bold text-black">Payment</h3>
 
-            <div className="space-y-4 mb-6">
-              <div className="flex justify-between items-center">
+            <div className="mb-6 space-y-4">
+              <div className="flex items-center justify-between">
                 <span className="text-grey text-sm font-medium">Order</span>
-                <span className="text-black font-bold text-sm">
+                <span className="text-sm font-bold text-black">
                   Rp. {formatIdr(amountNum)}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <span className="text-grey text-sm font-medium">Fee</span>
-                <span className="text-black font-bold text-sm">Rp. {formatIdr(adminFee)}</span>
+                <span className="text-sm font-bold text-black">
+                  Rp. {formatIdr(adminFee)}
+                </span>
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <span className="text-grey text-sm font-medium">Tax</span>
-                <span className="text-black font-bold text-sm">
+                <span className="text-sm font-bold text-black">
                   Rp. {formatIdr(tax)}
                 </span>
               </div>
             </div>
 
-            <div className="border-t-[1.5px] border-dashed border-grey-light pt-5 mb-6">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-800 font-bold text-base">
+            <div className="border-grey-light mb-6 border-t-[1.5px] border-dashed pt-5">
+              <div className="flex items-center justify-between">
+                <span className="text-base font-bold text-gray-800">
                   Sub Total
                 </span>
-                <span className="text-black font-bold text-base">
+                <span className="text-base font-bold text-black">
                   Rp. {formatIdr(subTotal)}
                 </span>
               </div>
@@ -187,12 +191,12 @@ const TopUp = () => {
               onClick={handleSubmit}
               isLoading={isLoading}
               isFullWidth
-              className="font-bold py-3.5 rounded-xl shadow-md cursor-pointer"
+              className="cursor-pointer rounded-xl py-3.5 font-bold shadow-md"
             >
               Submit
             </Button>
 
-            <p className="text-xs text-grey mt-4 leading-relaxed">
+            <p className="text-grey mt-4 text-xs leading-relaxed">
               *Get Discount if you pay with Bank Central Asia
             </p>
           </div>

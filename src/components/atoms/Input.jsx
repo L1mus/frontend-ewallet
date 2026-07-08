@@ -27,17 +27,17 @@ export const Input = ({
   const currentType = isPassword && showPassword ? "text" : type;
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex w-full flex-col gap-2">
       {label && (
         <label htmlFor={label} className="text-base font-normal text-black">
           {label}
         </label>
       )}
 
-      <div className="relative flex items-center w-full">
+      <div className="relative flex w-full items-center">
         {icon && (
-          <div className="absolute left-4 pointer-events-none flex items-center justify-center">
-            <img src={icon} alt="" className="w-5 h-5 opacity-50" />
+          <div className="pointer-events-none absolute left-4 flex items-center justify-center">
+            <img src={icon} alt="" className="h-5 w-5 opacity-50" />
           </div>
         )}
 
@@ -46,13 +46,13 @@ export const Input = ({
           id={label}
           placeholder={placeholder}
           className={cn(
-            "w-full h-11 bg-white border rounded-lg text-black text-sm transition-all duration-200 placeholder:text-grey",
+            "placeholder:text-grey h-11 w-full rounded-lg border bg-white text-sm text-black transition-all duration-200",
             "outline-none disabled:cursor-not-allowed",
             icon ? "pl-12" : "pl-4",
             isPassword ? "pr-12" : "pr-4",
             error
-              ? "border-danger focus:border-danger focus:ring-1 focus:ring-danger"
-              : "border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary",
+              ? "border-danger focus:border-danger focus:ring-danger focus:ring-1"
+              : "focus:border-primary focus:ring-primary border-gray-200 focus:ring-1",
             className,
           )}
           {...props}
@@ -62,19 +62,19 @@ export const Input = ({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 p-1 rounded-md hover:bg-gray-50 transition-colors outline-none flex items-center justify-center text-gray-400 hover:text-primary"
+            className="hover:text-primary absolute right-3 flex items-center justify-center rounded-md p-1 text-gray-400 transition-colors outline-none hover:bg-gray-50"
           >
             {showPassword ? (
-              <EyeOff className="w-5 h-5" />
+              <EyeOff className="h-5 w-5" />
             ) : (
-              <Eye className="w-5 h-5" />
+              <Eye className="h-5 w-5" />
             )}
           </button>
         )}
       </div>
 
       {error && (
-        <span className="text-xs font-medium text-danger">{error}</span>
+        <span className="text-danger text-xs font-medium">{error}</span>
       )}
     </div>
   );

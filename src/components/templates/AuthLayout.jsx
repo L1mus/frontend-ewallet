@@ -13,25 +13,25 @@ import iconMoneyWallet from "../../assets/icons/Money-Wallet.svg";
 
 export const AuthLayout = ({ children, title, subtitle, imagePath }) => {
   return (
-    <div className="relative min-h-screen bg-primary-light flex">
-      <div className="relative z-10 w-full min-h-screen md:w-1/2 bg-white md:rounded-r-[40px] shadow-[10px_0_30px_rgba(0,0,0,0.15)] flex flex-col justify-center items-center px-8 py-31.5 lg:px-12 md:py-41">
+    <div className="bg-primary-light relative flex min-h-screen">
+      <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center bg-white px-8 py-31.5 shadow-[10px_0_30px_rgba(0,0,0,0.15)] md:w-1/2 md:rounded-r-[40px] md:py-41 lg:px-12">
         <div className="w-full">
           <div className="mb-5 md:mt-0">
-            <div className="flex items-center gap-2 mb-4 lg:mb-5">
+            <div className="mb-4 flex items-center gap-2 lg:mb-5">
               <img
                 src={iconMoneyWallet}
                 alt="Logo"
-                className="w-8 h-8 object-contain"
+                className="h-8 w-8 object-contain"
               />
-              <h1 className="text-primary font-medium text-xl tracking-wide">
+              <h1 className="text-primary text-xl font-medium tracking-wide">
                 E-Wallet
               </h1>
             </div>
 
-            <h1 className="text-2xl lg:text-3xl font-medium text-grey mb-1 leading-tight">
+            <h1 className="text-grey mb-1 text-2xl leading-tight font-medium lg:text-3xl">
               {title}
             </h1>
-            <p className="text-sm lg:text-base font-normal text-grey leading-snug">
+            <p className="text-grey text-sm leading-snug font-normal lg:text-base">
               {subtitle}
             </p>
           </div>
@@ -40,20 +40,20 @@ export const AuthLayout = ({ children, title, subtitle, imagePath }) => {
         </div>
       </div>
 
-      <div className="hidden md:flex absolute top-0 right-0 w-1/2 h-full items-center justify-center pointer-events-none bg-primary overflow-hidden">
-        <div className="relative z-20 flex items-center justify-center w-full h-full">
+      <div className="bg-primary pointer-events-none absolute top-0 right-0 hidden h-full w-1/2 items-center justify-center overflow-hidden md:flex">
+        <div className="relative z-20 flex h-full w-full items-center justify-center">
           <div
-            className="absolute w-225 h-full rounded z-0"
+            className="absolute z-0 h-full w-225 rounded"
             style={{
               background: "radial-gradient(circle, #7096FF 0%, #3868FD 87%)",
               opacity: 0.8,
             }}
           />
-          <div className="absolute w-100 h-100 bg-white/10 rounded-full blur-3xl z-1 translate-y-20 pointer-events-none" />
+          <div className="pointer-events-none absolute z-1 h-100 w-100 translate-y-20 rounded-full bg-white/10 blur-3xl" />
           <img
             src={imagePath}
             alt="Illustration"
-            className="relative z-10 w-4/5 max-w-125 object-contain hover:scale-105 transition-transform duration-700 drop-shadow-2xl"
+            className="relative z-10 w-4/5 max-w-125 object-contain drop-shadow-2xl transition-transform duration-700 hover:scale-105"
           />
         </div>
       </div>

@@ -16,7 +16,7 @@ const SidebarNavItem = ({
         onClick={onClick}
         className={({ isActive }) =>
           cn(
-            "group flex items-center gap-3 w-full px-6 py-3 rounded-md",
+            "group flex w-full items-center gap-3 rounded-md px-6 py-3",
             "text-sm font-semibold transition-colors duration-200",
             isActive
               ? "bg-primary text-white"
@@ -28,7 +28,7 @@ const SidebarNavItem = ({
           <>
             <Icon
               className={cn(
-                "shrink-0 transition-colors duration-200 w-6 h-6",
+                "h-6 w-6 shrink-0 transition-colors duration-200",
                 isActive ? "text-white" : "text-grey group-hover:text-primary",
               )}
             />
@@ -51,10 +51,10 @@ const SidebarNavItem = ({
       isFullWidth={true}
       onClick={onClick}
       className={cn(
-        "justify-start gap-3 px-6 py-3 h-auto rounded-md outline-none",
+        "h-auto justify-start gap-3 rounded-md px-6 py-3 outline-none",
         "text-sm font-semibold",
         isDestructive
-          ? "text-danger hover:text-danger/80 transition-none  hover:scale-100"
+          ? "text-danger hover:text-danger/80 transition-none hover:scale-100"
           : "text-black-light",
       )}
     >

@@ -24,9 +24,9 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
   return (
     <header
       className={cn(
-        "relative w-full h-19 flex items-center justify-between px-5 md:px-8 z-30 transition-all duration-300",
+        "relative z-30 flex h-19 w-full items-center justify-between px-5 transition-all duration-300 md:px-8",
         isDashboard
-          ? "bg-primary md:bg-white md:border-b md:border-grey-light"
+          ? "bg-primary md:border-grey-light md:border-b md:bg-white"
           : "bg-primary",
       )}
     >
@@ -34,30 +34,30 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
         {isDashboard ? (
           <>
             <Link to={"/"}>
-              <div className="hidden md:flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/10 rounded-md flex items-center justify-center">
+              <div className="hidden items-center gap-3 md:flex">
+                <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-md">
                   <img src="/logo.png" alt="Logo" />
                 </div>
-                <h1 className="text-primary font-semibold text-xl tracking-wide">
+                <h1 className="text-primary text-xl font-semibold tracking-wide">
                   E-Wallet
                 </h1>
               </div>
             </Link>
 
-            <div className="flex md:hidden items-center gap-3 relative">
+            <div className="relative flex items-center gap-3 md:hidden">
               <div
                 onClick={toggleProfileDropdown}
-                className="flex items-center gap-3 cursor-pointer"
+                className="flex cursor-pointer items-center gap-3"
               >
                 <Avatar
                   imageSrc={currentUser.profilePicture}
-                  className="w-11 h-11 border-2 border-white/20"
+                  className="h-11 w-11 border-2 border-white/20"
                 />
                 <div className="flex flex-col text-white">
-                  <span className="text-[10px] font-light leading-tight opacity-80">
+                  <span className="text-[10px] leading-tight font-light opacity-80">
                     Hello,
                   </span>
-                  <span className="font-semibold text-sm tracking-wide">
+                  <span className="text-sm font-semibold tracking-wide">
                     {currentUser.username}
                   </span>
                 </div>
@@ -76,9 +76,9 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
               <img
                 src="/logo.png"
                 alt="Logo"
-                className="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center"
+                className="flex h-10 w-10 items-center justify-center rounded-md bg-white/20"
               />
-              <h1 className="text-white font-semibold text-xl tracking-wide">
+              <h1 className="text-xl font-semibold tracking-wide text-white">
                 E-Wallet
               </h1>
             </div>
@@ -89,7 +89,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
       <div className="flex items-center">
         {isDashboard || stateAuth.isLogin ? (
           <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-4 relative">
+            <div className="relative hidden items-center gap-4 md:flex">
               <span
                 className={cn(
                   "font-medium transition-colors",
@@ -102,7 +102,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
               <div onClick={toggleProfileDropdown} className="cursor-pointer">
                 <Avatar
                   imageSrc={currentUser.profilePicture}
-                  className="w-10 h-10 shadow-sm"
+                  className="h-10 w-10 shadow-sm"
                 />
               </div>
 
@@ -122,13 +122,13 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
 
             <button
               onClick={isDashboard ? onOpenSidebar : toggleMobileMenu}
-              className="md:hidden text-white flex items-center justify-center p-1 cursor-pointer"
+              className="flex cursor-pointer items-center justify-center p-1 text-white md:hidden"
             >
               <Menu size={28} />
             </button>
 
             {!isDashboard && isMobileMenuOpen && (
-              <div className="absolute top-17.5 right-5 z-50 border-2 shadow-lg shadow-black-light border-black w-56 p-3 rounded-xl bg-white flex flex-col gap-2 md:hidden">
+              <div className="shadow-black-light absolute top-17.5 right-5 z-50 flex w-56 flex-col gap-2 rounded-xl border-2 border-black bg-white p-3 shadow-lg md:hidden">
                 <Link to="/dashboard" onClick={toggleMobileMenu}>
                   <Button variant="rectangelBlue" isFullWidth={true}>
                     Ke Dashboard
@@ -139,11 +139,11 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
           </div>
         ) : (
           <>
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden items-center gap-4 md:flex">
               <Link to="/auth/login">
                 <Button
                   variant="rectangelWhite"
-                  className="bg-transparent text-white border border-white hover:bg-white hover:text-primary h-10 px-6"
+                  className="hover:text-primary h-10 border border-white bg-transparent px-6 text-white hover:bg-white"
                 >
                   Sign In
                 </Button>
@@ -151,7 +151,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
               <Link to="/register">
                 <Button
                   variant="rectangelWhite"
-                  className="h-10 text-primary px-6 shadow-md"
+                  className="text-primary h-10 px-6 shadow-md"
                 >
                   Sign Up
                 </Button>
@@ -160,19 +160,19 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
 
             <div className="relative md:hidden">
               <button
-                className="text-white flex items-center justify-center p-1 cursor-pointer"
+                className="flex cursor-pointer items-center justify-center p-1 text-white"
                 onClick={toggleMobileMenu}
               >
                 <Menu size={28} />
               </button>
 
               {isMobileMenuOpen && (
-                <div className="absolute top-12.5 right-0 border-2 shadow-lg shadow-black-light border-black w-56 p-3 rounded-xl bg-white z-50 flex flex-col gap-1">
+                <div className="shadow-black-light absolute top-12.5 right-0 z-50 flex w-56 flex-col gap-1 rounded-xl border-2 border-black bg-white p-3 shadow-lg">
                   <Link to="/auth/login" onClick={toggleMobileMenu}>
                     <Button
                       isHaveIcon={true}
                       Icon={LogIn}
-                      className="text-black hover:text-white font-medium text-sm hover:outline-primary hover:bg-primary hover:scale-100 transition-none justify-start"
+                      className="hover:outline-primary hover:bg-primary justify-start text-sm font-medium text-black transition-none hover:scale-100 hover:text-white"
                       isFullWidth={true}
                       variant="rectangelWhite"
                     >

@@ -38,35 +38,35 @@ const Button = ({
         className={
           typeButton === "rectangel"
             ? cn(
-                "cursor-pointer transition delay-150 duration-300 ease-in-out rounded-md h-12 px-5 py-3 flex justify-center items-center",
-                "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:hover:scale-100 disabled:hover:translate-z-0 disabled:transition-none",
+                "flex h-12 cursor-pointer items-center justify-center rounded-md px-5 py-3 transition delay-150 duration-300 ease-in-out",
+                "disabled:cursor-not-allowed disabled:bg-gray-600 disabled:opacity-50 disabled:transition-none disabled:hover:translate-z-0 disabled:hover:scale-100",
 
                 {
-                  "bg-primary text-white hover:opacity-80 ":
+                  "bg-primary text-white hover:opacity-80":
                     variant === "rectangelBlue",
-                  "bg-white  text-primary hover:outline-primary hover:outline-2":
+                  "text-primary hover:outline-primary bg-white hover:outline-2":
                     variant === "rectangelWhite",
                 },
                 isFullWidth ? "w-full" : "w-max",
                 className,
               )
             : cn(
-                "cursor-pointer transition delay-150 duration-300 ease-in-out hover:-translate-z-1 hover:scale-110 rounded-full w-12 h-12 p-4 flex justify-center items-center",
-                "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:transition-none",
+                "flex h-12 w-12 cursor-pointer items-center justify-center rounded-full p-4 transition delay-150 duration-300 ease-in-out hover:-translate-z-1 hover:scale-110",
+                "disabled:cursor-not-allowed disabled:bg-gray-600 disabled:opacity-50 disabled:transition-none",
                 {
                   "bg-primary text-white": variant === "cicleBlue",
-                  "bg-white text-primary": variant === "cicleWhite",
+                  "text-primary bg-white": variant === "cicleWhite",
                 },
                 className,
               )
         }
         {...props}
       >
-        <div className="flex gap-3.5 items-center justify-center">
+        <div className="flex items-center justify-center gap-3.5">
           {isLoading && <Spinner size={18} className="text-current" />}
           {isHaveIcon && Icon && <Icon className={iconClassName} />}
           {children && (
-            <span className="flex gap-3 items-center justify-center">
+            <span className="flex items-center justify-center gap-3">
               {children}
             </span>
           )}

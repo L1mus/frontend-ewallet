@@ -16,15 +16,15 @@ const OauthButton = ({ icon, text, isLoad = false, className, ...props }) => {
       type="button"
       disabled={isLoad || props.disabled}
       className={cn(
-        "w-full h-13 flex items-center justify-center gap-3 border border-[#E8E8E8] rounded-full bg-white transition-colors duration-200",
-        "hover:bg-gray-50 active:bg-gray-100 outline-none cursor-pointer",
-        "disabled:opacity-50 disabled:cursor-not-allowed",
+        "flex h-13 w-full items-center justify-center gap-3 rounded-full border border-[#E8E8E8] bg-white transition-colors duration-200",
+        "cursor-pointer outline-none hover:bg-gray-50 active:bg-gray-100",
+        "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
     >
-      <img src={icon} alt={text} className="w-6 h-6 object-contain" />
-      <span className="text-[#4F5665] font-medium text-sm">{text}</span>
+      <img src={icon} alt={text} className="h-6 w-6 object-contain" />
+      <span className="text-sm font-medium text-[#4F5665]">{text}</span>
     </button>
   );
 };

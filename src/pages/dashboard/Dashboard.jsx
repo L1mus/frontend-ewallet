@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import CardBalance from "../../components/organism/CardBalance";
 import IncomeChart from "../../components/organism/IncomeChart";
@@ -16,11 +16,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const {
-    transactions,
-    dashboardSummary,
-    chartData,
-  } = useSelector((state) => state.transactionReducer);
+  const { transactions, dashboardSummary, chartData } = useSelector(
+    (state) => state.transactionReducer,
+  );
 
   useEffect(() => {
     dispatch(transactionActions.getUserDashboard());
@@ -34,17 +32,17 @@ const Dashboard = () => {
   const recentTransactions = (transactions ?? []).slice(0, 4);
 
   const formatBalance = (val) =>
-      new Intl.NumberFormat("id-ID").format(val ?? 0);
+    new Intl.NumberFormat("id-ID").format(val ?? 0);
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 pb-10">
-        <div className="lg:col-span-8 xl:col-span-9 flex flex-col gap-6 lg:gap-8 min-w-0">
+      <div className="grid grid-cols-1 gap-6 pb-10 lg:grid-cols-12 lg:gap-8">
+        <div className="flex min-w-0 flex-col gap-6 lg:col-span-8 lg:gap-8 xl:col-span-9">
           <div className="grid grid-cols-3 gap-2 sm:gap-4">
             <CardBalance
               title="Balance"
               balance={formatBalance(balance)}
-              children={<Balance className="w-6 h-6" />}
+              children={<Balance className="h-6 w-6" />}
               Icon={ArrowGrowth}
               iconStyle="text-success"
               growthIndicators="+2%"
@@ -53,7 +51,7 @@ const Dashboard = () => {
             <CardBalance
               title="Income"
               balance={formatBalance(totalIncome)}
-              children={<MoneyWithdraw className="w-6 h-6" />}
+              children={<MoneyWithdraw className="h-6 w-6" />}
               Icon={ArrowGrowth}
               iconStyle="text-success"
               growthIndicators="+11.01%"
@@ -62,7 +60,7 @@ const Dashboard = () => {
             <CardBalance
               title="Expense"
               balance={formatBalance(totalExpense)}
-              children={<MoneyWithdraw className="rotate-180 w-6 h-6" />}
+              children={<MoneyWithdraw className="h-6 w-6 rotate-180" />}
               Icon={ArrowGrowth}
               iconStyle="rotate-180 text-danger"
               growthIndicators="-5.06%"
@@ -70,17 +68,17 @@ const Dashboard = () => {
             />
           </div>
 
-          <div className="flex sm:flex-row justify-between items-center gap-4 sm:border sm:border-grey-light sm:rounded-xl sm:p-4 sm:px-6 sm:bg-white sm:shadow-sm">
-            <h3 className="hidden sm:block font-bold text-black text-lg">
+          <div className="sm:border-grey-light flex items-center justify-between gap-4 sm:flex-row sm:rounded-xl sm:border sm:bg-white sm:p-4 sm:px-6 sm:shadow-sm">
+            <h3 className="hidden text-lg font-bold text-black sm:block">
               Fast Service
             </h3>
-            <div className="flex gap-3 w-full sm:w-auto">
+            <div className="flex w-full gap-3 sm:w-auto">
               <Button
                 variant="rectangelBlue"
                 isHaveIcon={true}
                 Icon={IconTopUp}
                 iconClassName={"w-6 h-6"}
-                className="flex-1 sm:flex-none h-11 px-4 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+                className="h-11 flex-1 px-4 text-xs whitespace-nowrap sm:flex-none sm:px-6 sm:text-sm"
                 onClick={() => navigate("/topup")}
               >
                 Top Up
@@ -90,7 +88,7 @@ const Dashboard = () => {
                 isHaveIcon={true}
                 Icon={IconTransfer}
                 iconClassName={"w-6 h-6"}
-                className="flex-1 sm:flex-none h-11 px-4 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+                className="h-11 flex-1 px-4 text-xs whitespace-nowrap sm:flex-none sm:px-6 sm:text-sm"
                 onClick={() => navigate("/transfer")}
               >
                 Transfer
@@ -103,61 +101,53 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className=" lg:col-span-4 xl:col-span-3 bg-white border border-grey-light rounded-xl p-5 shadow-sm flex flex-col h-full">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-bold text-black text-sm">
+        <div className="border-grey-light flex h-full flex-col rounded-xl border bg-white p-5 shadow-sm lg:col-span-4 xl:col-span-3">
+          <div className="mb-6 flex items-center justify-between">
+            <h3 className="text-sm font-bold text-black">
               Transaction History
             </h3>
             <button
-              className="text-primary text-xs xl:text-sm font-medium hover:underline cursor-pointer whitespace-nowrap"
+              className="text-primary cursor-pointer text-xs font-medium whitespace-nowrap hover:underline xl:text-sm"
               onClick={() => navigate("/history")}
             >
               See All
             </button>
           </div>
 
-          <div
-            className="flex flex-col gap-5 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5
-            [&::-webkit-scrollbar-track]:bg-transparent
-            [&::-webkit-scrollbar-thumb]:bg-gray-50
-            [&::-webkit-scrollbar-thumb]:rounded-full
-            hover:[&::-webkit-scrollbar-thumb]:bg-gray-300"
-          >
+          <div className="flex flex-col gap-5 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-50 hover:[&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:bg-transparent">
             {recentTransactions.length > 0 ? (
-                recentTransactions.map((tx) => {
-                  const isExpense = tx.type === "expense";
+              recentTransactions.map((tx) => {
+                const isExpense = tx.type === "expense";
 
-                  const displayName =
-                      tx.receiver_name || (isExpense ? "Recipient" : "Sender");
+                const displayName =
+                  tx.receiver_name || (isExpense ? "Recipient" : "Sender");
 
-                  const displayAvatar =
-                      tx.profile_picture_url || "/defaultAvatar.jpg";
+                const displayAvatar =
+                  tx.profile_picture_url || "/defaultAvatar.jpg";
 
-                  return (
-                      <CardHistory
-                          key={tx.transaction_id}
-                          name={displayName}
-                          status={
-                            tx.activity_type === "topup" ? "Top Up" : "Transfer"
-                          }
-                          imageSrc={displayAvatar}
-                          amount={
-                            <span
-                                className={
-                                  isExpense ? "text-danger" : "text-success"
-                                }
-                            >
+                return (
+                  <CardHistory
+                    key={tx.transaction_id}
+                    name={displayName}
+                    status={
+                      tx.activity_type === "topup" ? "Top Up" : "Transfer"
+                    }
+                    imageSrc={displayAvatar}
+                    amount={
+                      <span
+                        className={isExpense ? "text-danger" : "text-success"}
+                      >
                         {isExpense ? "-" : "+"}Rp{" "}
-                              {new Intl.NumberFormat("id-ID").format(tx.amount ?? 0)}
+                        {new Intl.NumberFormat("id-ID").format(tx.amount ?? 0)}
                       </span>
-                          }
-                      />
-                  );
-                })
+                    }
+                  />
+                );
+              })
             ) : (
-                <p className="text-grey text-sm text-center py-8 italic m-auto">
-                  No transactions yet.
-                </p>
+              <p className="text-grey m-auto py-8 text-center text-sm italic">
+                No transactions yet.
+              </p>
             )}
           </div>
         </div>

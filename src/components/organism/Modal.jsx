@@ -11,7 +11,7 @@ const Modal = ({ isOpen, onClose, children, className }) => {
       />
       <div
         className={cn(
-          "relative bg-white w-full max-w-lg rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.1)] animate-in fade-in zoom-in duration-200",
+          "animate-in fade-in zoom-in relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-[0_20px_50px_rgba(0,0,0,0.1)] duration-200",
           className,
         )}
       >

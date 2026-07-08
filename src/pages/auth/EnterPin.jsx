@@ -58,48 +58,54 @@ const EnterPin = () => {
   if (!stateAuth.isLogin) return null;
 
   return (
-      <div className="relative min-h-screen w-full bg-primary font-sans overflow-hidden flex items-center justify-center px-4 sm:px-8 py-10">
-        <div
-            className="absolute w-150 h-150 sm:w-200 sm:h-200 rounded-full z-0 pointer-events-none"
-            style={{
-              background: "radial-gradient(circle, #7096FF 0%, #3868FD 87%)",
-              opacity: 0.7,
-            }}
-        />
+    <div className="bg-primary relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10 font-sans sm:px-8">
+      <div
+        className="pointer-events-none absolute z-0 h-150 w-150 rounded-full sm:h-200 sm:w-200"
+        style={{
+          background: "radial-gradient(circle, #7096FF 0%, #3868FD 87%)",
+          opacity: 0.7,
+        }}
+      />
 
-        <div className="relative z-10 w-full max-w-125 bg-white rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] px-8 py-12 sm:px-12 flex flex-col items-center">
-          <div className="w-full flex justify-start items-center gap-2 mb-8">
-            <img src={iconMoneyWallet} alt="Logo" className="w-8 h-8 object-contain" />
-            <h1 className="text-primary font-medium text-xl tracking-wide">E-Wallet</h1>
-          </div>
+      <div className="relative z-10 flex w-full max-w-125 flex-col items-center rounded-[30px] bg-white px-8 py-12 shadow-[0_20px_50px_rgba(0,0,0,0.15)] sm:px-12">
+        <div className="mb-8 flex w-full items-center justify-start gap-2">
+          <img
+            src={iconMoneyWallet}
+            alt="Logo"
+            className="h-8 w-8 object-contain"
+          />
+          <h1 className="text-primary text-xl font-medium tracking-wide">
+            E-Wallet
+          </h1>
+        </div>
 
-          <div className="mb-10 mt-8 md:mt-0 text-center">
-            <h1 className="text-3xl font-medium text-black mb-3 leading-snug">
-              Enter Security PIN
-            </h1>
-            <p className="text-base font-normal text-grey leading-relaxed">
-              Please enter your 6-digit E-Wallet PIN to authorize this action.
-            </p>
-          </div>
+        <div className="mt-8 mb-10 text-center md:mt-0">
+          <h1 className="mb-3 text-3xl leading-snug font-medium text-black">
+            Enter Security PIN
+          </h1>
+          <p className="text-grey text-base leading-relaxed font-normal">
+            Please enter your 6-digit E-Wallet PIN to authorize this action.
+          </p>
+        </div>
 
-          <div className="w-full flex flex-col gap-8 mt-2 items-center">
-            <PinInput length={6} onChange={setPinValue} error={error} />
+        <div className="mt-2 flex w-full flex-col items-center gap-8">
+          <PinInput length={6} onChange={setPinValue} error={error} />
 
-            <Button
-                variant="rectangelBlue"
-                isFullWidth={true}
-                onClick={handleVerify}
-                isLoading={stateTransaction?.isLoading}
-            >
-              {stateTransaction?.isLoading ? "Processing..." : "Confirm PIN"}
-            </Button>
+          <Button
+            variant="rectangelBlue"
+            isFullWidth={true}
+            onClick={handleVerify}
+            isLoading={stateTransaction?.isLoading}
+          >
+            {stateTransaction?.isLoading ? "Processing..." : "Confirm PIN"}
+          </Button>
 
-            <button className="text-sm text-primary font-semibold hover:underline text-center cursor-pointer">
-              Forgot PIN?
-            </button>
-          </div>
+          <button className="text-primary cursor-pointer text-center text-sm font-semibold hover:underline">
+            Forgot PIN?
+          </button>
         </div>
       </div>
+    </div>
   );
 };
 

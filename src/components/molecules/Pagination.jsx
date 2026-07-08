@@ -14,7 +14,7 @@ const Pagination = ({
   if (totalPages === 0) return null;
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between mt-10 text-sm text-gray-400 gap-4">
+    <div className="mt-10 flex flex-col items-center justify-between gap-4 text-sm text-gray-400 md:flex-row">
       <span className="font-medium">
         Show {Math.min(itemsPerPage, totalItems)} History of {totalItems}{" "}
         History
@@ -24,7 +24,7 @@ const Pagination = ({
         <button
           disabled={currentPage === 1}
           onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-          className="text-grey text-base font-medium hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-grey text-base font-medium transition-colors hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
         >
           Prev
         </button>
@@ -35,10 +35,10 @@ const Pagination = ({
               key={page}
               onClick={() => onPageChange(page)}
               className={cn(
-                "transition-colors text-base",
+                "text-base transition-colors",
                 currentPage === page
                   ? "text-primary font-bold"
-                  : "text-gray-400 font-medium hover:text-black",
+                  : "font-medium text-gray-400 hover:text-black",
               )}
             >
               {page}
@@ -51,7 +51,7 @@ const Pagination = ({
           onClick={() =>
             currentPage < totalPages && onPageChange(currentPage + 1)
           }
-          className="text-black font-bold text-base hover:text-primary transition-colors disabled:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="hover:text-primary text-base font-bold text-black transition-colors disabled:cursor-not-allowed disabled:text-gray-400 disabled:opacity-50"
         >
           Next
         </button>

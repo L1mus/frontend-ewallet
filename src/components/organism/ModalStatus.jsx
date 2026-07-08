@@ -31,46 +31,46 @@ const ModalStatus = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="w-full flex flex-col items-center">
+      <div className="flex w-full flex-col items-center">
         {transferToName && (
-          <div className="w-full border-b border-grey-light pb-4 mb-6">
-            <h2 className="text-base font-bold text-grey tracking-wide uppercase">
+          <div className="border-grey-light mb-6 w-full border-b pb-4">
+            <h2 className="text-grey text-base font-bold tracking-wide uppercase">
               TRANSFER TO {transferToName}
             </h2>
           </div>
         )}
 
-        <div className="w-full flex justify-center mb-6">
+        <div className="mb-6 flex w-full justify-center">
           <img
             src={currentContent.imagePlaceholder}
             alt={`${status} illustration`}
-            className="w-auto h-40 object-contain"
+            className="h-40 w-auto object-contain"
           />
         </div>
 
-        <div className="text-center mb-8 w-full">
-          <h3 className="text-[26px] font-bold text-black mb-3">
+        <div className="mb-8 w-full text-center">
+          <h3 className="mb-3 text-[26px] font-bold text-black">
             {currentContent.titlePrefix}
             <span className={currentContent.titleColor}>
               {currentContent.titleHighlight}
             </span>
           </h3>
-          <p className="text-grey text-sm leading-relaxed px-4">
+          <p className="text-grey px-4 text-sm leading-relaxed">
             {currentContent.message}
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 w-full">
+        <div className="flex w-full flex-col gap-3">
           <button
             onClick={primaryAction?.onClick}
-            className="w-full py-4 rounded-xl font-bold text-base bg-primary text-white hover:bg-primary/90 transition-all cursor-pointer"
+            className="bg-primary hover:bg-primary/90 w-full cursor-pointer rounded-xl py-4 text-base font-bold text-white transition-all"
           >
             {primaryAction?.label}
           </button>
 
           <button
             onClick={secondaryAction?.onClick}
-            className="w-full py-4 rounded-xl font-bold text-base bg-white border border-primary text-primary hover:bg-primary/5 transition-all cursor-pointer"
+            className="border-primary text-primary hover:bg-primary/5 w-full cursor-pointer rounded-xl border bg-white py-4 text-base font-bold transition-all"
           >
             {secondaryAction?.label}
           </button>

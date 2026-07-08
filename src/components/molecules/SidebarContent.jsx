@@ -7,7 +7,7 @@ import History from "../../assets/icons/history.svg?react";
 import CreditCard from "../../assets/icons/Upload.svg?react";
 import UserRound from "../../assets/icons/2 User.svg?react";
 import LogOut from "../../assets/icons/Log Out.svg?react";
-import {authActions} from "../../redux/slice/authSlice.js";
+import { authActions } from "../../redux/slice/authSlice.js";
 
 const menuItems = [
   { path: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },

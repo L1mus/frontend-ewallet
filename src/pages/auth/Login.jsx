@@ -54,15 +54,15 @@ const Login = () => {
         subtitle="Fill out the form correctly or you can login with several option."
         imagePath={imgLogin}
       >
-        <div className="flex flex-col gap-4 mb-6">
+        <div className="mb-6 flex flex-col gap-4">
           <OauthButton icon={iconGoogle} text="Sign In With Google" />
           <OauthButton icon={iconFacebook} text="Sign In With Facebook" />
         </div>
 
-        <div className="flex items-center mb-6">
-          <div className="flex-1 h-px bg-[#E8E8E8]" />
-          <span className="px-4 text-[#A9A9A9] text-sm font-normal">Or</span>
-          <div className="flex-1 h-px bg-[#E8E8E8]" />
+        <div className="mb-6 flex items-center">
+          <div className="h-px flex-1 bg-[#E8E8E8]" />
+          <span className="px-4 text-sm font-normal text-[#A9A9A9]">Or</span>
+          <div className="h-px flex-1 bg-[#E8E8E8]" />
         </div>
 
         <form
@@ -93,7 +93,7 @@ const Login = () => {
             <div className="flex justify-end">
               <Link
                 to="/auth/forgot-password"
-                className="text-sm text-primary font-medium hover:underline"
+                className="text-primary text-sm font-medium hover:underline"
               >
                 Forgot Password?
               </Link>
@@ -101,7 +101,7 @@ const Login = () => {
           </div>
 
           {authError && (
-            <span className="text-sm font-medium text-danger text-center">
+            <span className="text-danger text-center text-sm font-medium">
               {authError}
             </span>
           )}

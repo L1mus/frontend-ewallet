@@ -3,189 +3,200 @@ import { transactionService } from "../../services/transactionService.js";
 import { userService } from "../../services/userService.js";
 
 const initialState = {
-    transactions: [],
-    dashboardSummary: null,
-    chartData: [],
-    transferReceiver: [],
-    currentTransaction: null,
-    isLoading: false,
-    error: null,
-    successMsg: null,
+  transactions: [],
+  dashboardSummary: null,
+  chartData: [],
+  transferReceiver: [],
+  currentTransaction: null,
+  isLoading: false,
+  error: null,
+  successMsg: null,
 };
 
 const transfer = createAsyncThunk(
-    "transaction/transfer",
-    async (payload, { rejectWithValue }) => {
-        try {
-            return await transactionService.transfer(payload);
-        } catch (error) {
-            return rejectWithValue(
-                error.response?.data?.message || "Transfer transaction failed to process."
-            );
-        }
+  "transaction/transfer",
+  async (payload, { rejectWithValue }) => {
+    try {
+      return await transactionService.transfer(payload);
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Transfer transaction failed to process.",
+      );
     }
+  },
 );
 
 const getDataReceiver = createAsyncThunk(
-    "transaction/dataReceiver",
-    async (params, { rejectWithValue }) => {
-        try {
-            const result = await userService.findReceiver(params);
-            return result.data;
-        } catch (error) {
-            return rejectWithValue(
-                error.response?.data?.message || "Get data failed."
-            );
-        }
+  "transaction/dataReceiver",
+  async (params, { rejectWithValue }) => {
+    try {
+      const result = await userService.findReceiver(params);
+      return result.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Get data failed.",
+      );
     }
+  },
 );
 
 const topUp = createAsyncThunk(
-    "transaction/topUp",
-    async (payload, { rejectWithValue }) => {
-        try {
-            return await transactionService.topup(payload);
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || "Top-up failed.");
-        }
+  "transaction/topUp",
+  async (payload, { rejectWithValue }) => {
+    try {
+      return await transactionService.topup(payload);
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Top-up failed.");
     }
+  },
 );
 
 const getUserDashboard = createAsyncThunk(
-    "transaction/getUserDashboard",
-    async (payload, { rejectWithValue }) => {
-        try {
-            return await userService.getDashboard();
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || "Failed to get dashboard.");
-        }
+  "transaction/getUserDashboard",
+  async (payload, { rejectWithValue }) => {
+    try {
+      return await userService.getDashboard();
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to get dashboard.",
+      );
     }
+  },
 );
 
 const getTransactionReport = createAsyncThunk(
-    "transaction/getTransactionReport",
-    async (payload = {}, { rejectWithValue }) => {
-        try {
-            const period = payload?.period || "week";
-            return await userService.getTransactionReport(period);
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || "Failed to get report.");
-        }
+  "transaction/getTransactionReport",
+  async (payload = {}, { rejectWithValue }) => {
+    try {
+      const period = payload?.period || "week";
+      return await userService.getTransactionReport(period);
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to get report.",
+      );
     }
+  },
 );
 
 const getTransactionHistory = createAsyncThunk(
-    "transaction/getTransactionHistory",
-    async (params = {}, { rejectWithValue }) => {
-        try {
-            const result = await userService.getTransactionHistory(params);
-            return result.data;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || "Failed to get history.");
-        }
+  "transaction/getTransactionHistory",
+  async (params = {}, { rejectWithValue }) => {
+    try {
+      const result = await userService.getTransactionHistory(params);
+      return result.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to get history.",
+      );
     }
+  },
 );
 
 const deleteTransactionHistory = createAsyncThunk(
-    "transaction/deleteTransactionHistory",
-    async (id, { rejectWithValue }) => {
-        try {
-            return id;
-        } catch (err) {
-            console.error(err);
-            return rejectWithValue("Failed to delete transaction.");
-        }
+  "transaction/deleteTransactionHistory",
+  async (id, { rejectWithValue }) => {
+    try {
+      return id;
+    } catch (err) {
+      console.error(err);
+      return rejectWithValue("Failed to delete transaction.");
     }
+  },
 );
 
 const transactionSlice = createSlice({
-    name: "transaction",
-    initialState,
-    reducers: {
-        clearCurrentTransaction: (state) => {
-            state.currentTransaction = null;
-        },
-        clearError: (state) => {
-            state.error = null;
-            state.successMsg = null;
-        },
-        removeTransaction: (state, action) => {
-            state.transactions = state.transactions.filter(
-                (tx) => tx.transaction_id !== action.payload
-            );
-        },
+  name: "transaction",
+  initialState,
+  reducers: {
+    clearCurrentTransaction: (state) => {
+      state.currentTransaction = null;
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(getDataReceiver.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.transferReceiver = Array.isArray(action.payload) ? action.payload : [];
-            })
-            .addCase(getUserDashboard.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.dashboardSummary = action.payload;
-            })
-            .addCase(getTransactionReport.fulfilled, (state, action) => {
-                state.isLoading = false;
-                const payload = action.payload;
-                state.chartData = Array.isArray(payload?.data)
-                    ? payload.data
-                    : Array.isArray(payload)
-                        ? payload
-                        : [];
-            })
-            .addCase(getTransactionHistory.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.transactions = Array.isArray(action.payload) ? action.payload : [];
-            })
-            .addCase(deleteTransactionHistory.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.transactions = state.transactions.filter(
-                    (tx) => tx.transaction_id !== action.payload
-                );
-            })
-            .addCase(transfer.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.currentTransaction = action.payload;
-                state.successMsg = "Transfer successfully sent!";
-            })
-            .addCase(topUp.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.currentTransaction = action.payload;
-                state.successMsg = "Top-up successful!";
-            })
-            .addCase("auth/logoutUser/fulfilled", () => initialState)
-            .addMatcher(
-                (action) =>
-                    action.type.startsWith("transaction/") &&
-                    action.type.endsWith("/pending"),
-                (state) => {
-                    state.isLoading = true;
-                    state.error = null;
-                    state.successMsg = null;
-                }
-            )
-            .addMatcher(
-                (action) =>
-                    action.type.startsWith("transaction/") &&
-                    action.type.endsWith("/rejected"),
-                (state, action) => {
-                    state.isLoading = false;
-                    state.error = action.payload;
-                }
-            );
+    clearError: (state) => {
+      state.error = null;
+      state.successMsg = null;
     },
+    removeTransaction: (state, action) => {
+      state.transactions = state.transactions.filter(
+        (tx) => tx.transaction_id !== action.payload,
+      );
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getDataReceiver.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.transferReceiver = Array.isArray(action.payload)
+          ? action.payload
+          : [];
+      })
+      .addCase(getUserDashboard.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.dashboardSummary = action.payload;
+      })
+      .addCase(getTransactionReport.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const payload = action.payload;
+        state.chartData = Array.isArray(payload?.data)
+          ? payload.data
+          : Array.isArray(payload)
+            ? payload
+            : [];
+      })
+      .addCase(getTransactionHistory.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.transactions = Array.isArray(action.payload)
+          ? action.payload
+          : [];
+      })
+      .addCase(deleteTransactionHistory.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.transactions = state.transactions.filter(
+          (tx) => tx.transaction_id !== action.payload,
+        );
+      })
+      .addCase(transfer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentTransaction = action.payload;
+        state.successMsg = "Transfer successfully sent!";
+      })
+      .addCase(topUp.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentTransaction = action.payload;
+        state.successMsg = "Top-up successful!";
+      })
+      .addCase("auth/logoutUser/fulfilled", () => initialState)
+      .addMatcher(
+        (action) =>
+          action.type.startsWith("transaction/") &&
+          action.type.endsWith("/pending"),
+        (state) => {
+          state.isLoading = true;
+          state.error = null;
+          state.successMsg = null;
+        },
+      )
+      .addMatcher(
+        (action) =>
+          action.type.startsWith("transaction/") &&
+          action.type.endsWith("/rejected"),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        },
+      );
+  },
 });
 
 export const transactionActions = {
-    ...transactionSlice.actions,
-    getDataReceiver,
-    transfer,
-    topUp,
-    getUserDashboard,
-    getTransactionReport,
-    getTransactionHistory,
-    deleteTransactionHistory,
+  ...transactionSlice.actions,
+  getDataReceiver,
+  transfer,
+  topUp,
+  getUserDashboard,
+  getTransactionReport,
+  getTransactionHistory,
+  deleteTransactionHistory,
 };
 
 export default transactionSlice.reducer;

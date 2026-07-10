@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { AuthLayout } from "../../components/templates/AuthLayout";
 import PinInput from "../../components/atoms/PinInput";
 import Button from "../../components/atoms/Button";
-import imgBill from "../../assets/images/wallet.png";
+import imgBill from "../../assets/images/person.svg";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { userService } from "../../services/userService.js";

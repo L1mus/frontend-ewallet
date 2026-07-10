@@ -4,7 +4,7 @@ import { Footer } from "../components/organism/Footer";
 import Button from "../components/atoms/Button";
 import { AboutCard } from "../components/organism/AboutCard";
 import { ReviewCard } from "../components/organism/ReviewCard";
-import logoHero from "../assets/images/online-payment-security-concept-3d-phone-bill.png";
+import logoHero from "../assets/images/3d-hand-making-cashless-payment-from-smartphone 1.svg";
 import logoPlayStore from "../assets/icons/appstore.svg";
 import logoGplay from "../assets/icons/gplay.svg";
 import logoAirbnb from "../assets/icons/logo-airbnb.svg";
@@ -13,12 +13,12 @@ import logoDropbox from "../assets/icons/logo-dropbox.svg";
 import logoHnm from "../assets/icons/logo-hnm.svg";
 import logoMicrosoft from "../assets/icons/logo-microsoft.svg";
 import logoCanon from "../assets/icons/logo-canon.svg";
-import logoHeadphone from "../assets/icons/Headphones.svg";
-import logoShield from "../assets/icons/Shield Done.svg";
-import logoDownload from "../assets/icons/Upload.svg";
+import logoHeadphone from "../assets/icons/Headphones.svg?react";
+import logoShield from "../assets/icons/Shield Done.svg?react";
+import logoDownload from "../assets/icons/Upload.svg?react";
 import logoMoney from "../assets/icons/u_money-bill.svg";
 import logoUserCheck from "../assets/icons/u_user-check.svg";
-import logoMobile from "../assets/images/Mobile - Dashboard V2.png";
+import logoMobile from "../assets/images/Mobile.svg";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ModalConfirm from "../components/organism/ModalConfirm";
 import { useNavigate } from "react-router";
@@ -180,17 +180,17 @@ const LandingPage = () => {
 
           <div className="flex w-full flex-col flex-nowrap justify-center gap-5 md:flex-row">
             <AboutCard
-              icon={logoHeadphone}
+              Icon={logoHeadphone}
               title="24/7 Support"
               description="We have 24/7 contact support so you can contact us whenever you want and we will respond it."
             />
             <AboutCard
-              icon={logoShield}
+              Icon={logoShield}
               title="Data Privacy"
               description="We make sure your data is safe in our database and we will encrypt any data you submitted to us."
             />
             <AboutCard
-              icon={logoDownload}
+              Icon={logoDownload}
               title="Easy Download"
               description="Zwallet is 100% totally free to use. It's now available on Google Play Store and App Store."
             />

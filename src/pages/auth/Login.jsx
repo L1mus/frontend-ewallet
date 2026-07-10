@@ -9,7 +9,7 @@ import iconPassword from "../../assets/icons/Password.svg";
 import iconMail from "../../assets/icons/mail.svg";
 import iconFacebook from "../../assets/icons/bx_bxl-facebook-circle.svg";
 import iconGoogle from "../../assets/icons/flat-color-icons_google.svg";
-import imgLogin from "../../assets/images/wallet.png";
+import imgLogin from "../../assets/images/3d-hand-making-cashless-payment-from-smartphone 1.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../redux/slice/authSlice";
 import { toast } from "react-toastify";

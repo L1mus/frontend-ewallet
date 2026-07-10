@@ -8,8 +8,8 @@
   --color-grey-light: hsl(0, 0%, 86.7%);
   --color-black: hsl(225 59% 10%);
   --color-black-light: hsl(217.5, 6.45%, 24.31%);
-  --color-primary: hsl(231 100% 58%);
-  --color-primary-light: hsl(225 97% 61%);
+  --color-primary: hsl(201, 100%, 50%);
+  --color-primary-light: hsl(201 50% 80%);
   --color-danger: hsl(0 100% 41%);
   --color-success: hsl(144 73% 44%);
   --color-green: hsl(120 100% 33%);

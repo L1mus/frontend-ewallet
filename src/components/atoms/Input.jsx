@@ -62,12 +62,12 @@ export const Input = ({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="hover:text-primary absolute right-3 flex items-center justify-center rounded-md p-1 text-gray-400 transition-colors outline-none hover:bg-gray-50"
+            className="hover:text-primary absolute right-3 flex cursor-pointer items-center justify-center rounded-md p-1 text-gray-400 transition-colors outline-none hover:scale-105"
           >
             {showPassword ? (
-              <EyeOff className="h-5 w-5" />
+              <EyeOff className="h-5 w-5 md:h-7 md:w-7" />
             ) : (
-              <Eye className="h-5 w-5" />
+              <Eye className="h-5 w-5 md:h-7 md:w-7" />
             )}
           </button>
         )}

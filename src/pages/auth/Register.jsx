@@ -5,7 +5,7 @@ import { AuthLayout } from "../../components/templates/AuthLayout";
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
 import OauthButton from "../../components/atoms/OauthButton";
-import imgWallet from "../../assets/images/wallet.png";
+import imgWallet from "../../assets/images/3d-hand-making-cashless-payment-from-smartphone.png";
 import iconPassword from "../../assets/icons/Password.svg";
 import iconMail from "../../assets/icons/mail.svg";
 import iconUser from "../../assets/icons/2 User.svg";

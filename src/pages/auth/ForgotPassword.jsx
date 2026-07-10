@@ -5,11 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
-import iconMoneyWallet from "../../assets/icons/Money-Wallet.svg";
 import iconMail from "../../assets/icons/mail.svg";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../redux/slice/authSlice";
+import Logo from "../../components/atoms/Logo";
 
 const schemaEmailForForgotPassword = z.object({
   email: z
@@ -45,21 +45,16 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="bg-primary-light relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10 font-sans sm:px-8">
+    <div className="bg-primary relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10 font-sans sm:px-8">
       <div
         className="pointer-events-none absolute z-0 h-full w-full rounded-full sm:h-200 sm:w-200"
         style={{
-          background: "radial-gradient(circle, #7096FF 0%, #3868FD 87%)",
-          opacity: 0.7,
+          background: "radial-gradient(circle, hsl(201 100% 55%), hsl(201, 100%, 50%))",
         }}
       />
 
       <div className="relative z-10 flex w-full max-w-125 flex-col rounded-[30px] bg-white px-8 py-12 shadow-[0_20px_50px_rgba(0,0,0,0.15)] sm:px-12">
-        <div className="mb-8 flex items-center gap-2">
-          <img src={iconMoneyWallet} alt="Logo" className="h-8 w-8" />
-          <h1 className="text-primary text-xl font-medium">E-Wallet</h1>
-        </div>
-
+        <Logo/>
         <h1 className="mb-2 text-[30px] leading-snug font-medium text-black">
           Fill Out Form Correctly 👋
         </h1>

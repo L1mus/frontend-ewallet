@@ -4,27 +4,29 @@ import iconPerson from "../../assets/icons/person.svg?react";
 import iconLogout from "../../assets/icons/Log Out.svg?react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../redux/slice/authSlice.js";
+import { NavLink } from "react-router";
 
 const DropdownMenuAvatarHeader = () => {
   const dispatch = useDispatch();
   return (
     <>
-      <div className="shadow-black-light w-62 rounded-xl border-2 border-black p-3 shadow-lg">
+      <div className="shadow-black-light w-62 rounded-b-lg border border-black shadow-lg">
         <div className="text-black hover:text-white">
-          <Button
-            isHaveIcon={true}
-            Icon={iconPerson}
-            className={
-              "hover:outline-primary hover:bg-primary justify-start text-sm font-medium text-black transition-none hover:scale-100 hover:text-white"
-            }
-            children="Profile"
-            isFullWidth={true}
-            variant="rectangelWhite"
-          />
+          <NavLink to={"/profile"}>
+            <Button
+              isHaveIcon={true}
+              Icon={iconPerson}
+              className={
+                "hover:bg-primary justify-start rounded-none bg-white text-sm font-medium text-black transition-none hover:scale-100 hover:text-white"
+              }
+              children="Profile"
+              isFullWidth={true}
+            />
+          </NavLink>
           <Button
             isHaveIcon={true}
             Icon={iconLogout}
-            className="hover:text-danger hover:bg-primary justify-start bg-white text-sm font-medium text-red-500 transition-none hover:scale-105 hover:text-lg"
+            className="hover:text-danger hover:bg-primary justify-start rounded-none bg-white text-sm font-medium text-red-500 transition-none hover:scale-100 hover:text-lg"
             children="Logout"
             isFullWidth={true}
             onClick={() => {

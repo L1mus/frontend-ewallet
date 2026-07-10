@@ -6,6 +6,7 @@ import Avatar from "../atoms/Avatar";
 import DropdownMenuAvatarHeader from "../molecules/DropdownMenuAvatarHeader";
 import cn from "../../utils/cn";
 import { useSelector } from "react-redux";
+import Logo from "../atoms/Logo";
 
 const Header = ({ isDashboard = false, onOpenSidebar }) => {
   const stateAuth = useSelector((state) => state.authReducer);
@@ -34,14 +35,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
         {isDashboard ? (
           <>
             <Link to={"/"}>
-              <div className="hidden items-center gap-3 md:flex">
-                <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-md">
-                  <img src="/logo.png" alt="Logo" />
-                </div>
-                <h1 className="text-primary text-xl font-semibold tracking-wide">
-                  E-Wallet
-                </h1>
-              </div>
+              <Logo/>
             </Link>
 
             <div className="relative flex items-center gap-3 md:hidden">
@@ -72,16 +66,7 @@ const Header = ({ isDashboard = false, onOpenSidebar }) => {
           </>
         ) : (
           <Link to={"/"}>
-            <div className="flex items-center gap-3">
-              <img
-                src="/logo.png"
-                alt="Logo"
-                className="flex h-10 w-10 items-center justify-center rounded-md bg-white/20"
-              />
-              <h1 className="text-xl font-semibold tracking-wide text-white">
-                E-Wallet
-              </h1>
-            </div>
+            <Logo/>
           </Link>
         )}
       </div>

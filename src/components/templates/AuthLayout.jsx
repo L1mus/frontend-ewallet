@@ -1,4 +1,5 @@
-import iconMoneyWallet from "../../assets/icons/Money-Wallet.svg";
+
+import Logo from "../atoms/Logo";
 
 /**
  * Layout template for authentication-related pages.
@@ -13,39 +14,27 @@ import iconMoneyWallet from "../../assets/icons/Money-Wallet.svg";
 
 export const AuthLayout = ({ children, title, subtitle, imagePath }) => {
   return (
-    <div className="bg-primary-light relative flex min-h-screen">
-      <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center bg-white px-8 py-31.5 shadow-[10px_0_30px_rgba(0,0,0,0.15)] md:w-1/2 md:rounded-r-[40px] md:py-41 lg:px-12">
-        <div className="w-full">
-          <div className="mb-5 md:mt-0">
-            <div className="mb-4 flex items-center gap-2 lg:mb-5">
-              <img
-                src={iconMoneyWallet}
-                alt="Logo"
-                className="h-8 w-8 object-contain"
-              />
-              <h1 className="text-primary text-xl font-medium tracking-wide">
-                E-Wallet
-              </h1>
-            </div>
-
-            <h1 className="text-grey mb-1 text-2xl leading-tight font-medium lg:text-3xl">
+    <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
+      <div className="flex w-full flex-col items-center justify-center bg-white p-7 lg:px-12">
+        <div className="w-full flex flex-col gap-2 lg:gap-3">
+          <Logo/>
+            <h1 className="text-grey text-2xl leading-tight font-medium lg:text-3xl">
               {title}
             </h1>
             <p className="text-grey text-sm leading-snug font-normal lg:text-base">
               {subtitle}
             </p>
-          </div>
 
           <div className="w-full">{children}</div>
         </div>
       </div>
 
-      <div className="bg-primary pointer-events-none absolute top-0 right-0 hidden h-full w-1/2 items-center justify-center overflow-hidden md:flex">
-        <div className="relative z-20 flex h-full w-full items-center justify-center">
+      <div className="hidden md:grid">
+        <div className="relative z-20 flex items-center justify-center">
           <div
-            className="absolute z-0 h-full w-225 rounded"
+            className="absolute z-0 h-full w-full"
             style={{
-              background: "radial-gradient(circle, #7096FF 0%, #3868FD 87%)",
+              background: "radial-gradient(circle, hsl(201 100% 65%), hsl(201, 100%, 50%))",
               opacity: 0.8,
             }}
           />
